@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In Power</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1E3D; --ink-2:#122a52; --parchment:#F2ECDD; --parchment-2:#e8e0cb;
+    --gold:#C9A227; --gold-2:#e0bb45; --red:#B23A2F; --green:#2F6E5B; --blue:#2E5C8A;
+    --accent: var(--gold); --accent-2: var(--gold-2); --text-ink:#1c2536; --radius: 4px;
+  }
+  body.country-ng{ --accent: var(--green); --accent-2:#3d8d75; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--ink);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(201,162,39,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(201,162,39,0.08), transparent 45%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 26px);
+    color: var(--parchment); font-family:'Source Serif 4', serif; min-height:100vh;
+    display:flex; align-items:flex-start; justify-content:center; padding: 28px 14px 60px;
+    transition: background 0.6s ease;
+  }
+  .frame{ width:100%; max-width:800px; }
+  .masthead{ display:flex; align-items:baseline; justify-content:space-between; border-bottom: 2px solid var(--accent); padding-bottom:10px; margin-bottom:18px; }
+  .masthead h1{ font-family:'Oswald',sans-serif; font-weight:700; letter-spacing:2px; font-size:30px; margin:0; text-transform:uppercase; color: var(--parchment); }
+  .masthead h1 span{ color: var(--accent); }
+  .masthead .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; color:#9fb0cc; text-transform:uppercase; }
+  .hud{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; }
+  .hud .chip{ border:1px solid rgba(242,236,221,0.25); padding:5px 10px; border-radius:2px; letter-spacing:0.5px; color:#cfd9ee; background:rgba(255,255,255,0.03); }
+  .hud .chip b{ color: var(--accent-2); }
+  .card{ background: var(--parchment); color: var(--text-ink); border-radius: var(--radius); padding: 28px 28px 24px; box-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 2px 0 var(--accent) inset; position:relative; animation: rise 0.4s ease; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color: var(--red); margin-bottom:8px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  h2.title{ font-family:'Oswald',sans-serif; font-size:25px; margin:0 0 12px; line-height:1.15; text-transform:uppercase; letter-spacing:0.5px; }
+  p.lede{ font-size:15.5px; line-height:1.5; color:#3a3428; margin:0 0 18px; }
+  .btn-grid{ display:grid; gap:10px; }
+  .btn{ font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:0.4px; text-transform:uppercase; background: var(--ink); color: var(--parchment); border:none; padding:14px 18px; border-radius:2px; cursor:pointer; text-align:left; display:flex; justify-content:space-between; align-items:center; transition: transform 0.12s ease, background 0.15s ease; border-left: 4px solid var(--accent); }
+  .btn:hover{ background: var(--ink-2); transform: translateX(3px); }
+  .btn:active{ transform: translateX(1px) scale(0.99); }
+  .btn small{ font-family:'IBM Plex Mono',monospace; font-size:11px; opacity:0.65; text-transform:none;}
+  .btn.gold{ background: var(--accent); color: var(--ink); border-left-color: var(--ink);}
+  .btn.gold:hover{ background: var(--accent-2); }
+  .btn.outline{ background:transparent; color: var(--text-ink); border:1px solid #c9c2ab; border-left:4px solid var(--accent);}
+  .btn.outline:hover{ background:rgba(0,0,0,0.04); }
+  .zone-block{ margin-bottom:14px; }
+  .zone-head{ display:flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#5c5340; margin-bottom:6px; padding:4px 8px; border-radius:2px; background: var(--zonecolor,#ded4b6); }
+  .state-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(108px,1fr)); gap:7px; }
+  .state-grid button{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:9px 6px; border-radius:2px; border:1px solid #c9c2ab; background:#fbf8f0; cursor:pointer; color:#3a3428; transition:all .12s ease; }
+  .state-grid button:hover{ background:var(--ink); color:var(--parchment); border-color:var(--ink); }
+  .map-scroll{ max-height:390px; overflow-y:auto; padding-right:4px; margin-bottom:10px; }
+  .progress-row{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .progress-track{ flex:1; height:7px; background:#ddd5bd; border-radius:4px; overflow:hidden; }
+  .progress-fill{ height:100%; background: var(--red); transition: width 0.35s ease; }
+  .qnum{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7a705a; white-space:nowrap; }
+  .question-text{ font-family:'Oswald',sans-serif; font-size:20px; line-height:1.3; margin: 4px 0 18px; color:#1c2536; }
+  .hard-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; background: var(--red); color:#fff; padding:3px 8px; border-radius:10px; margin-bottom:8px; }
+  .cat-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; background:#e4dcc2; color:#5c5340; padding:3px 8px; border-radius:10px; margin-bottom:8px; margin-right:6px; }
+  .choices{ display:grid; gap:10px; }
+  .choice{ text-align:left; padding:13px 16px; border-radius:2px; border:1.5px solid #cfc6ab; background:#fbf8f0; font-family:'Source Serif 4',serif; font-size:15.5px; cursor:pointer; color:#2a2418; display:flex; gap:12px; align-items:flex-start; transition: all .12s ease; }
+  .choice .letter{ font-family:'IBM Plex Mono',monospace; font-weight:600; color: var(--accent); border:1px solid var(--accent); width:22px;height:22px;min-width:22px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:12px; }
+  .choice:hover:not(:disabled){ border-color: var(--ink); background:#f2ecdb; }
+  .choice.correct{ background:#e4f0e6; border-color:var(--green); }
+  .choice.wrong{ background:#f5e3e0; border-color:var(--red); }
+  .choice:disabled{ cursor:default; opacity:0.85; }
+  .feedback-banner{ margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:10px 12px; border-radius:2px; background:#e9e2cc; border-left:3px solid var(--accent); line-height:1.5; }
+  .next-row{ margin-top:18px; text-align:right; }
+  .tally-wrap{ display:flex; flex-direction:column; gap:18px; margin: 10px 0 22px; }
+  .tally-row{ display:flex; align-items:center; gap:14px; }
+  .tally-name{ width:150px; font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:14px; letter-spacing:0.5px; }
+  .flap-set{ display:flex; gap:4px; }
+  .flap{ width:34px; height:46px; background: var(--ink); color: var(--gold-2); border-radius:3px; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:26px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+  .flap::after{ content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(0,0,0,0.5); }
+  .flap.flip{ animation: flip 0.28s ease; }
+  @keyframes flip{ 0%{ transform: rotateX(0deg); } 50%{ transform: rotateX(90deg); opacity:0.4;} 100%{ transform: rotateX(0deg);} }
+  .pct-sign{ font-family:'IBM Plex Mono',monospace; font-size:20px; color:#7a705a; }
+  .bar-track{ flex:1; height:16px; background:#ddd5bd; border-radius:8px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:8px; transition:width 1.1s cubic-bezier(.2,.9,.2,1); }
+  .bar-fill.you{ background: var(--accent); }
+  .bar-fill.opp{ background:#8a94ab; }
+  .result-banner{ font-family:'Oswald',sans-serif; font-size:28px; text-transform:uppercase; text-align:center; padding:16px; margin:6px 0 18px; border-radius:2px; letter-spacing:1px; }
+  .result-banner.win{ background:#e4f0e6; color:var(--green); border:2px solid var(--green); }
+  .result-banner.lose{ background:#f5e3e0; color:var(--red); border:2px solid var(--red); }
+  .stat-row{ display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 22px; }
+  .stat-box{ flex:1; min-width:130px; background:#fbf8f0; border:1px solid #cfc6ab; border-radius:2px; padding:12px 14px; }
+  .stat-box .label{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:#7a705a; }
+  .stat-box .value{ font-family:'Oswald',sans-serif; font-size:24px; margin-top:4px; }
+  .weight-note{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7a705a; margin: -8px 0 16px; line-height:1.5; }
+  .incident-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; background: var(--ink); color: var(--gold-2); padding:4px 9px; border-radius:2px; margin-bottom:10px; }
+  .scenario-box{ background:#efe8d3; border-left:3px solid var(--red); padding:12px 14px; border-radius:2px; font-size:14.5px; line-height:1.5; margin-bottom:14px; color:#463f2e; }
+  .xp-track{ height:10px; background:#ddd5bd; border-radius:6px; overflow:hidden; margin-top:6px;}
+  .xp-fill{ height:100%; background: var(--green); transition: width 0.6s ease; }
+  #confetti{ position:fixed; inset:0; pointer-events:none; z-index:50; }
+  .footer-links{ text-align:center; margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6f7fa0; }
+  .footer-links a{ color:#9fb0cc; cursor:pointer; text-decoration:underline; }
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-thumb{ background:#c9c2ab; border-radius:4px; }
+  @media (max-width:480px){
+    .card{ padding:22px 18px 20px; } .masthead h1{ font-size:23px; } .question-text{ font-size:18px; }
+    .tally-name{ width:96px; font-size:12px; } .flap{ width:26px; height:36px; font-size:19px; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001s !important; transition-duration:0.001s !important; } }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="frame">
+  <div class="masthead">
+    <h1>IN <span>POWER</span></h1>
+    <div class="tag" id="hudTag">🗳️ Campaign Simulator</div>
+  </div>
+  <div class="hud" id="hud"></div>
+  <div class="card" id="card"></div>
+  <div class="footer-links" id="footerLinks"></div>
+</div>
+
+<script>
+/* =========================================================
+   DATA — US STATES
+   [name, abbr, capital, nickname, largestCity, year, region, [facts...]]
+   "facts" are state-specific, verified statements (history/gov/culture)
+   that ONLY ever appear attached to their true owning state.
+========================================================= */
+const US_RAW = [
+["Alabama","AL","Montgomery","Yellowhammer State","Birmingham",1819,"South",[
+ "Montgomery served as the first capital of the Confederate States of America in 1861.",
+ "Author Harper Lee, who wrote 'To Kill a Mockingbird,' was born in Monroeville.",
+ "The 1965 Selma-to-Montgomery civil rights marches took place here."]],
+["Alaska","AK","Juneau","The Last Frontier","Anchorage",1959,"West",[
+ "The United States purchased this territory from Russia in 1867, a deal nicknamed 'Seward's Folly.'",
+ "The Trans-Alaska Pipeline carries oil from Prudhoe Bay to the port of Valdez."]],
+["Arizona","AZ","Phoenix","Grand Canyon State","Phoenix",1912,"West",[
+ "This was the last of the contiguous 48 states admitted to the Union, in 1912.",
+ "Biosphere 2, a large-scale ecological research facility, is located here."]],
+["Arkansas","AR","Little Rock","The Natural State","Little Rock",1836,"South",[
+ "In 1957, federal troops enforced school desegregation at Little Rock Central High School.",
+ "Walmart, the world's largest retailer, was founded in Bentonville.",
+ "Former U.S. President Bill Clinton served as governor here before winning the presidency."]],
+["California","CA","Sacramento","Golden State","Los Angeles",1850,"West",[
+ "The Gold Rush began here in 1848 at Sutter's Mill, drawing hundreds of thousands of settlers.",
+ "This state became a state in 1850 without first going through a formal territorial stage.",
+ "Silicon Valley, home to major technology companies, is located here."]],
+["Colorado","CO","Denver","Centennial State","Denver",1876,"West",[
+ "This state is nicknamed the 'Centennial State' for joining the Union in 1876, the year of the U.S. centennial.",
+ "Denver, the capital, is nicknamed the 'Mile High City' for its elevation of exactly one mile.",
+ "This was among the first U.S. states to legalize recreational marijuana, in 2012."]],
+["Connecticut","CT","Hartford","Constitution State","Bridgeport",1788,"Northeast",[
+ "This state is nicknamed the 'Constitution State' after its 1639 Fundamental Orders, an early framework of government.",
+ "Yale University, one of the oldest universities in the U.S., is located in New Haven."]],
+["Delaware","DE","Dover","First State","Wilmington",1787,"Northeast",[
+ "This state earned its nickname 'The First State' by being first to ratify the U.S. Constitution, in 1787.",
+ "It has no state sales tax, making it a popular shopping destination.",
+ "It is named after Thomas West, Baron De La Warr, an early colonial governor of Virginia."]],
+["Florida","FL","Tallahassee","Sunshine State","Jacksonville",1845,"South",[
+ "Walt Disney World, one of the most visited resorts in the world, is located near Orlando.",
+ "St. Augustine, founded in 1565, is the oldest continuously occupied European-established city in the U.S.",
+ "The Kennedy Space Center on Merritt Island has launched most U.S. crewed space missions."]],
+["Georgia","GA","Atlanta","Peach State","Atlanta",1788,"South",[
+ "Coca-Cola, one of the world's most recognizable brands, was created in Atlanta in 1886.",
+ "This was the last of the original 13 colonies to be founded, in 1732.",
+ "Civil rights leader Martin Luther King Jr. was born in Atlanta."]],
+["Hawaii","HI","Honolulu","Aloha State","Honolulu",1959,"West",[
+ "This was an independent kingdom before it was annexed by the United States in 1898.",
+ "It is the only U.S. state with a former royal palace, Iolani Palace."]],
+["Idaho","ID","Boise","Gem State","Boise",1890,"West",[
+ "This state is famous nationwide for its potato farming.",
+ "Sun Valley, built in 1936, was one of the first destination ski resorts in the United States."]],
+["Illinois","IL","Springfield","Prairie State","Chicago",1818,"Midwest",[
+ "Abraham Lincoln launched his political career here, and it is nicknamed the 'Land of Lincoln.'",
+ "Chicago is home to the Willis Tower, long one of the tallest buildings in the Western Hemisphere."]],
+["Indiana","IN","Indianapolis","Hoosier State","Indianapolis",1816,"Midwest",[
+ "The Indianapolis 500, one of the most famous races in motorsport, is held here annually.",
+ "The origin of this state's nickname, 'Hoosier,' is still debated by historians."]],
+["Iowa","IA","Des Moines","Hawkeye State","Des Moines",1846,"Midwest",[
+ "This state traditionally holds the first-in-the-nation caucuses of the U.S. presidential nominating process.",
+ "The film 'Field of Dreams' was shot on a real farm in Dyersville."]],
+["Kansas","KS","Topeka","Sunflower State","Wichita",1861,"Midwest",[
+ "The violent 1850s political conflict known as 'Bleeding Kansas' was a precursor to the Civil War.",
+ "This state inspired the fictional setting of 'The Wizard of Oz.'"]],
+["Kentucky","KY","Frankfort","Bluegrass State","Louisville",1792,"South",[
+ "The Kentucky Derby, the longest continuously held horse race in the U.S., is held annually in Louisville.",
+ "This state was the birthplace of Abraham Lincoln, the 16th U.S. President."]],
+["Louisiana","LA","Baton Rouge","Pelican State","New Orleans",1812,"South",[
+ "New Orleans is widely regarded as the birthplace of jazz music.",
+ "This is the only U.S. state that uses 'parishes' instead of counties.",
+ "The 1803 Louisiana Purchase, named for this region, roughly doubled the size of the United States."]],
+["Maine","ME","Augusta","Pine Tree State","Portland",1820,"Northeast",[
+ "This state is famous nationwide for its lobster industry.",
+ "It was originally part of Massachusetts before becoming a separate state in 1820."]],
+["Maryland","MD","Annapolis","Old Line State","Baltimore",1788,"Northeast",[
+ "The U.S. Naval Academy is located in Annapolis.",
+ "The Star-Spangled Banner was written here during the 1814 bombardment of Fort McHenry in Baltimore."]],
+["Massachusetts","MA","Boston","Bay State","Boston",1788,"Northeast",[
+ "The Boston Tea Party of 1773, a protest against British taxation, took place here.",
+ "Harvard University, the oldest institution of higher learning in the U.S., is located in Cambridge."]],
+["Michigan","MI","Lansing","Great Lakes State","Detroit",1837,"Midwest",[
+ "Detroit is historically known as the center of the American automobile industry.",
+ "This is the only U.S. state made up of two peninsulas, connected by the Mackinac Bridge."]],
+["Minnesota","MN","Saint Paul","North Star State","Minneapolis",1858,"Midwest",[
+ "The Mall of America, one of the largest shopping malls in the U.S., is in Bloomington.",
+ "This state is nicknamed the 'Land of 10,000 Lakes.'"]],
+["Mississippi","MS","Jackson","Magnolia State","Jackson",1817,"South",[
+ "This state is widely regarded as the birthplace of the Blues music genre.",
+ "It was the site of intense civil rights activism, including the 1964 'Freedom Summer' campaign."]],
+["Missouri","MO","Jefferson City","Show Me State","Kansas City",1821,"Midwest",[
+ "The Gateway Arch in St. Louis symbolizes the city's role in westward expansion.",
+ "The Pony Express mail service began here, in St. Joseph, in 1860."]],
+["Montana","MT","Helena","Treasure State","Billings",1889,"West",[
+ "The Battle of Little Bighorn, where Custer's forces were defeated, took place here in 1876.",
+ "This state is home to Glacier National Park, known for dramatic mountain scenery."]],
+["Nebraska","NE","Lincoln","Cornhusker State","Omaha",1867,"Midwest",[
+ "This is the only U.S. state with a unicameral (single-chamber) state legislature.",
+ "Arbor Day, the tree-planting holiday, was founded in Nebraska City."]],
+["Nevada","NV","Carson City","Silver State","Las Vegas",1864,"West",[
+ "Las Vegas is famous worldwide for its casinos and entertainment industry.",
+ "This state's rushed 1864 admission to the Union helped secure ratification of the 13th Amendment."]],
+["New Hampshire","NH","Concord","Granite State","Manchester",1788,"Northeast",[
+ "This state traditionally holds the first primary in the U.S. presidential nominating process.",
+ "Its state motto, 'Live Free or Die,' is one of the most famous in the U.S."]],
+["New Jersey","NJ","Trenton","Garden State","Newark",1787,"Northeast",[
+ "Atlantic City is a historic East Coast resort and casino town.",
+ "Thomas Edison developed many famous inventions at his laboratory in Menlo Park."]],
+["New Mexico","NM","Santa Fe","Land of Enchantment","Albuquerque",1912,"West",[
+ "The world's first atomic bomb was tested at the Trinity Site here in 1945.",
+ "White Sands, one of the world's largest gypsum dune fields, is located here."]],
+["New York","NY","Albany","Empire State","New York City",1788,"Northeast",[
+ "The Statue of Liberty, a global symbol of freedom, stands in New York Harbor.",
+ "New York City was the first capital of the U.S. under the Constitution, where Washington was inaugurated in 1789."]],
+["North Carolina","NC","Raleigh","Tar Heel State","Charlotte",1789,"South",[
+ "The Wright Brothers made the first successful powered airplane flight at Kitty Hawk in 1903.",
+ "Its 'Research Triangle' is a major hub for technology and higher education."]],
+["North Dakota","ND","Bismarck","Peace Garden State","Fargo",1889,"Midwest",[
+ "This state is home to Theodore Roosevelt National Park, named for the president who ranched there.",
+ "It was admitted to the Union on the same day as South Dakota, in 1889."]],
+["Ohio","OH","Columbus","Buckeye State","Columbus",1803,"Midwest",[
+ "This is the home state of aviation pioneers Orville and Wilbur Wright.",
+ "It is sometimes called the 'Mother of Modern Presidents,' the birthplace of several U.S. presidents including William McKinley."]],
+["Oklahoma","OK","Oklahoma City","Sooner State","Oklahoma City",1907,"South",[
+ "The Trail of Tears forcibly relocated many Native American nations to this area in the 1830s.",
+ "The 1889 Land Run, where settlers raced to claim land, gave rise to the nickname 'Sooner State.'"]],
+["Oregon","OR","Salem","Beaver State","Portland",1859,"West",[
+ "This state is home to Crater Lake, the deepest lake in the United States.",
+ "It was one of the first U.S. states to adopt universal vote-by-mail elections."]],
+["Pennsylvania","PA","Harrisburg","Keystone State","Philadelphia",1787,"Northeast",[
+ "The Declaration of Independence and U.S. Constitution were both signed in Philadelphia.",
+ "The Liberty Bell, an icon of American independence, is housed in Philadelphia."]],
+["Rhode Island","RI","Providence","Ocean State","Providence",1790,"Northeast",[
+ "This was the last of the original 13 colonies to ratify the U.S. Constitution, in 1790.",
+ "It is the smallest U.S. state by land area."]],
+["South Carolina","SC","Columbia","Palmetto State","Charleston",1788,"South",[
+ "The first shots of the U.S. Civil War were fired at Fort Sumter here in 1861.",
+ "This was the first state to formally secede from the Union, in December 1860."]],
+["South Dakota","SD","Pierre","Mount Rushmore State","Sioux Falls",1889,"Midwest",[
+ "Mount Rushmore, carved with the faces of four U.S. presidents, is located here.",
+ "It was admitted to the Union on the same day as North Dakota, in 1889."]],
+["Tennessee","TN","Nashville","Volunteer State","Memphis",1796,"South",[
+ "Graceland, the famous estate of Elvis Presley, is located in Memphis.",
+ "Nashville is widely known as the center of the American country music industry."]],
+["Texas","TX","Austin","Lone Star State","Houston",1845,"South",[
+ "This state was an independent republic from 1836 to 1845, before joining the United States.",
+ "It is the largest U.S. state in the contiguous United States by land area."]],
+["Utah","UT","Salt Lake City","Beehive State","Salt Lake City",1896,"West",[
+ "This state was largely settled by Mormon pioneers led by Brigham Young in 1847.",
+ "It is home to five national parks, often called the 'Mighty Five.'"]],
+["Vermont","VT","Montpelier","Green Mountain State","Burlington",1791,"Northeast",[
+ "This state uses a two-year term for its governor, unlike most U.S. states.",
+ "It is the top producer of maple syrup in the United States.",
+ "It briefly existed as an independent republic before joining the Union in 1791."]],
+["Virginia","VA","Richmond","Old Dominion","Virginia Beach",1788,"South",[
+ "This state is nicknamed the 'Mother of Presidents' for being the birthplace of more U.S. presidents than any other.",
+ "Jamestown, founded in 1607, was the first permanent English settlement in North America."]],
+["Washington","WA","Olympia","Evergreen State","Seattle",1889,"West",[
+ "The Space Needle in Seattle was built for the 1962 World's Fair.",
+ "This is the only U.S. state named after a president."]],
+["West Virginia","WV","Charleston","Mountain State","Charleston",1863,"South",[
+ "This state was formed in 1863 by seceding from Virginia, which had joined the Confederacy.",
+ "It is known nationwide for its Appalachian mountain culture and coal-mining history."]],
+["Wisconsin","WI","Madison","Badger State","Milwaukee",1848,"Midwest",[
+ "This state is famous nationwide for its cheese production, earning residents the nickname 'Cheeseheads.'",
+ "It passed the first workers' compensation law in the U.S., in 1911."]],
+["Wyoming","WY","Cheyenne","Equality State","Cheyenne",1890,"West",[
+ "This was the first U.S. state or territory to grant women the right to vote, in 1869.",
+ "Yellowstone, the first national park established in the U.S., lies mostly within its borders."]]
+];
+const US_STATES = US_RAW.map(a=>({name:a[0],abbr:a[1],capital:a[2],nickname:a[3],largestCity:a[4],year:a[5],region:a[6],facts:a[7]}));
+
+const US_REGION_META = {
+  "Northeast": {emoji:"🍂", color:"#e4d9c0"},
+  "South": {emoji:"🌴", color:"#e9d3c8"},
+  "Midwest": {emoji:"🌾", color:"#e6e2c2"},
+  "West": {emoji:"🏔️", color:"#d7e0d9"}
+};
+
+/* =========================================================
+   DATA — NIGERIA STATES
+   [name, capital, zone, creationYear, [facts...]]
+========================================================= */
+const NG_RAW = [
+["Abia","Umuahia","South East",1991,[
+ "Aba, a city here, is known nationwide as a hub for local manufacturing and shoemaking.",
+ "This state was created in 1991, carved out of the old Imo State."]],
+["Adamawa","Yola","North East",1991,[
+ "This state is named after the historic Adamawa Emirate, founded in the 19th century as part of the Sokoto Caliphate."]],
+["Akwa Ibom","Uyo","South South",1987,[
+ "This state is one of Nigeria's leading producers of crude oil and natural gas."]],
+["Anambra","Awka","South East",1976,[
+ "Onitsha, a city here, is home to one of the largest markets in West Africa."]],
+["Bauchi","Bauchi","North East",1976,[
+ "This state is home to Yankari National Park, one of Nigeria's most visited wildlife reserves."]],
+["Bayelsa","Yenagoa","South South",1996,[
+ "This state was created in 1996 and is considered the home state of former President Goodluck Jonathan."]],
+["Benue","Makurdi","North Central",1976,[
+ "This state is often called Nigeria's 'Food Basket' for its large agricultural output."]],
+["Borno","Maiduguri","North East",1976,[
+ "This state was historically home to the Kanem-Bornu Empire, one of the oldest and longest-lasting empires in African history."]],
+["Cross River","Calabar","South South",1976,[
+ "This state is home to the Obudu Mountain Resort and a major stretch of tropical rainforest."]],
+["Delta","Asaba","South South",1991,[
+ "Home to cities like Warri and Asaba, this state is a major center of Nigeria's oil industry."]],
+["Ebonyi","Abakaliki","South East",1996,[
+ "This state is known as a leading producer of rice and salt in southeastern Nigeria."]],
+["Edo","Benin City","South South",1991,[
+ "Benin City, its capital, was the seat of the ancient Benin Kingdom, famous for its bronze artworks."]],
+["Ekiti","Ado-Ekiti","South West",1996,[
+ "This state is nicknamed the 'Fountain of Knowledge' for its strong emphasis on education."]],
+["Enugu","Enugu","South East",1991,[
+ "Its capital was once the capital of Nigeria's old Eastern Region and the historic center of the country's coal-mining industry."]],
+["Gombe","Gombe","North East",1996,[
+ "This state is nicknamed the 'Jewel in the Savannah.'"]],
+["Imo","Owerri","South East",1976,[
+ "This state is home to Oguta Lake, a popular tourist attraction in southeastern Nigeria."]],
+["Jigawa","Dutse","North West",1991,[
+ "This state is known for large-scale irrigation farming along the Hadejia River."]],
+["Kaduna","Kaduna","North West",1976,[
+ "Its capital served as the capital of Nigeria's Northern Region during British colonial rule."]],
+["Kano","Kano","North West",1967,[
+ "Its capital is one of the oldest cities in West Africa, historically a key hub on the trans-Saharan trade routes."]],
+["Katsina","Katsina","North West",1987,[
+ "This state is the birthplace of two former Nigerian heads of state: Muhammadu Buhari and Umaru Musa Yar'Adua."]],
+["Kebbi","Birnin Kebbi","North West",1991,[
+ "This state is one of Nigeria's largest producers of rice."]],
+["Kogi","Lokoja","North Central",1991,[
+ "This state is nicknamed the 'Confluence State' because it is where the Niger and Benue rivers meet."]],
+["Kwara","Ilorin","North Central",1967,[
+ "This state is home to the University of Ilorin, one of Nigeria's foremost federal universities."]],
+["Lagos","Ikeja","South West",1967,[
+ "This state served as Nigeria's federal capital until it was replaced by Abuja in 1991.",
+ "This state is Nigeria's economic hub and one of the largest cities in Africa."]],
+["Nasarawa","Lafia","North Central",1996,[
+ "This state holds significant deposits of tin and other solid minerals."]],
+["Niger","Minna","North Central",1976,[
+ "This is Nigeria's largest state by land area.",
+ "It is home to Kainji Dam, which supplies hydroelectric power via the Niger River."]],
+["Ogun","Abeokuta","South West",1976,[
+ "This state is home to numerous universities, earning it the nickname 'Gateway State.'",
+ "Afrobeat pioneer Fela Kuti was born in Abeokuta, this state's capital."]],
+["Ondo","Akure","South West",1976,[
+ "This state is one of Nigeria's leading producers of cocoa."]],
+["Osun","Osogbo","South West",1991,[
+ "This state is home to the Osun-Osogbo Sacred Grove, a UNESCO World Heritage Site dedicated to the river goddess Osun."]],
+["Oyo","Ibadan","South West",1976,[
+ "This state is named after the historic Oyo Empire, one of the most powerful West African states between the 17th and 19th centuries.",
+ "Its capital, Ibadan, was historically one of the largest cities in West Africa."]],
+["Plateau","Jos","North Central",1976,[
+ "Its capital, Jos, has a long tin-mining history and a notably cool climate for Nigeria."]],
+["Rivers","Port Harcourt","South South",1967,[
+ "Its capital, Port Harcourt, is a major center of Nigeria's oil industry."]],
+["Sokoto","Sokoto","North West",1976,[
+ "Its capital was the historic seat of the Sokoto Caliphate, founded by Usman dan Fodio in the early 19th century."]],
+["Taraba","Jalingo","North East",1991,[
+ "This state is home to the Mambilla Plateau, one of Nigeria's coolest and highest regions."]],
+["Yobe","Damaturu","North East",1991,[
+ "This state lies within Nigeria's Sahel region in the northeast."]],
+["Zamfara","Gusau","North West",1996,[
+ "This state has seen significant gold deposits discovered in recent years."]]
+];
+const NG_STATES = NG_RAW.map(a=>({name:a[0],capital:a[1],zone:a[2],creationYear:a[3],facts:a[4]}));
+
+const NG_ZONE_META = {
+  "North Central": {emoji:"🌾", color:"#e6e2c2"},
+  "North East": {emoji:"🏔️", color:"#d7e0d9"},
+  "North West": {emoji:"🕌", color:"#e4d9c0"},
+  "South East": {emoji:"🌳", color:"#dbe5d1"},
+  "South South": {emoji:"🛢️", color:"#dcd6e6"},
+  "South West": {emoji:"🏙️", color:"#e9d3c8"}
+};
+
+const NG_COASTAL = ["Lagos","Ogun","Ondo","Delta","Bayelsa","Rivers","Akwa Ibom","Cross River"];
+const US_REGIONS = ["Northeast","South","Midwest","West"];
+const NG_ZONES = ["North Central","North East","North West","South East","South South","South West"];
+
+/* =========================================================
+   NATIONAL-LEVEL BANK — used ONLY for President races, never
+   attached to a single state's governor race.
+========================================================= */
+const HARD_US_BANK = [
+["Which U.S. state was the first to ratify the Constitution, in 1787?","Delaware",["Pennsylvania","Virginia","Massachusetts"]],
+["The 1803 Louisiana Purchase roughly doubled the size of the U.S. — which country sold the territory?","France",["Spain","Britain","Mexico"]],
+["Which amendment to the U.S. Constitution formally abolished slavery?","The 13th Amendment",["The 14th Amendment","The 15th Amendment","The 19th Amendment"]],
+["Which state was the last of the 50 admitted to the Union, in August 1959?","Hawaii",["Alaska","Arizona","New Mexico"]],
+["The Mexican-American War ended with a treaty that gave the U.S. much of the Southwest — what was it called?","The Treaty of Guadalupe Hidalgo",["The Treaty of Versailles","The Treaty of Paris","The Missouri Compromise"]],
+["How many amendments make up the U.S. Bill of Rights?","10",["8","12","5"]],
+["The Civil War officially began in 1861 with an attack on which fort?","Fort Sumter",["Fort Knox","Fort McHenry","Fort Ticonderoga"]],
+["Which U.S. President served four terms before the 22nd Amendment set a two-term limit?","Franklin D. Roosevelt",["Theodore Roosevelt","Woodrow Wilson","Harry Truman"]],
+["Under the U.S. Constitution, which branch holds the formal power to declare war?","Congress",["The President","The Supreme Court","The Department of Defense"]],
+["How many electoral votes are needed to win the U.S. presidency, out of 538 total?","270",["218","300","51"]]
+];
+
+const HARD_NG_BANK = [
+["Nigeria gained independence from Britain in which year?","1960",["1963","1957","1966"]],
+["Nigeria became a republic in which year, prior to the executive presidential system?","1963",["1960","1979","1999"]],
+["What is the name of Nigeria's currency?","The Naira",["The Cedi","The Rand","The Shilling"]],
+["Which Nigerian city is widely known as the hub of 'Nollywood', the country's film industry?","Lagos",["Abuja","Kano","Port Harcourt"]],
+["Which Nigerian author wrote the classic novel 'Things Fall Apart'?","Chinua Achebe",["Wole Soyinka","Chimamanda Ngozi Adichie","Ben Okri"]],
+["Nigeria's federal capital was officially moved from Lagos to Abuja in which year?","1991",["1976","1999","1960"]],
+["Nigeria's civil war, also known as the Biafran War, lasted from 1967 until which year?","1970",["1966","1975","1979"]],
+["In what year did playwright Wole Soyinka become the first African to win the Nobel Prize in Literature?","1986",["1991","1960","2001"]],
+["How many geopolitical zones is Nigeria traditionally divided into?","6",["4","8","5"]],
+["Nigeria adopted a U.S.-style presidential system of government in which year?","1979",["1960","1999","1966"]]
+];
+
+/* =========================================================
+   HELPERS
+========================================================= */
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function sampleN(arr,n){ return shuffle(arr).slice(0,n); }
+function distractors(pool, correct, field, n){
+  const vals = [...new Set(pool.filter(s=>s[field]!==correct).map(s=>s[field]))];
+  return sampleN(vals,n);
+}
+function mkQ(text, correct, wrongs, cat, hard){
+  const choices = shuffle([correct, ...wrongs]);
+  return { q:text, choices, answer: choices.indexOf(correct), cat: cat||'General', hard: !!hard };
+}
+function factsPoolOf(all){
+  return all.flatMap(s=>s.facts.map(f=>({owner:s.name, text:f})));
+}
+
+/* ---------- Region-accurate "fact" templates (shared logic) ---------- */
+function factForwardQs(state, pool, nameLabel){
+  const own = state.facts;
+  if(own.length===0) return [];
+  const n = Math.min(2, own.length);
+  const usedIdx = sampleN(own.map((_,i)=>i), n);
+  return usedIdx.map(i=>{
+    const correct = own[i];
+    const wrongs = sampleN(pool.filter(f=>f.owner!==state.name), 3).map(f=>f.text);
+    return mkQ(`Which of these is true about ${nameLabel}?`, correct, wrongs, 'History & Culture');
+  });
+}
+function factBooleanQs(state, pool, nameLabel){
+  const ownItems = pool.filter(f=>f.owner===state.name);
+  const otherItems = sampleN(pool.filter(f=>f.owner!==state.name), 8);
+  const items = shuffle([...ownItems, ...otherItems]).slice(0,9);
+  return items.map(item=>{
+    const truth = item.owner===state.name ? "True" : "False";
+    return mkQ(`True or False, about ${nameLabel}: "${item.text}"`, truth, [truth==="True"?"False":"True"], 'History & Culture', true);
+  });
+}
+
+/* ---------- US question pool ---------- */
+function usQuestionPool(state, all){
+  const pool = [];
+  pool.push(mkQ(`What is the capital of ${state.name}?`, state.capital, distractors(all,state.capital,'capital',3), 'Government'));
+  pool.push(mkQ(`${state.capital} is the capital of which state?`, state.name, distractors(all,state.name,'name',3), 'Government'));
+  pool.push(mkQ(`Which nickname belongs to ${state.name}?`, state.nickname, distractors(all,state.nickname,'nickname',3), 'Culture'));
+  pool.push(mkQ(`What is the largest city in ${state.name}?`, state.largestCity, distractors(all,state.largestCity,'largestCity',3), 'Geography'));
+  pool.push(mkQ(`In what year did ${state.name} become a U.S. state?`, String(state.year), distractors(all,state.year,'year',3).map(String), 'History'));
+  pool.push(mkQ(`Which U.S. Census region is ${state.name} located in?`, state.region, US_REGIONS.filter(r=>r!==state.region), 'Geography'));
+  const sameRegion = all.filter(s=>s.region===state.region && s.name!==state.name);
+  if(sameRegion.length>0){
+    const correct = pick(sameRegion);
+    const wrongPool = all.filter(s=>s.region!==state.region);
+    pool.push(mkQ(`Which of these states shares ${state.name}'s region (${state.region})?`, correct.name, sampleN(wrongPool,3).map(s=>s.name), 'Geography'));
+  }
+  const boolOthers = shuffle(all.filter(s=>s.name!==state.name)).slice(0,4);
+  boolOthers.forEach(o=>{
+    const truth = o.region===state.region ? "True" : "False";
+    pool.push(mkQ(`True or False: ${o.name} is in the same Census region as ${state.name}.`, truth, [truth==="True"?"False":"True"], 'Geography'));
+  });
+  const yearOthers = shuffle(all.filter(s=>s.name!==state.name)).slice(0,4);
+  yearOthers.forEach(o=>{
+    const truth = o.year < state.year ? "True" : "False";
+    pool.push(mkQ(`True or False: ${o.name} became a state before ${state.name}.`, truth, [truth==="True"?"False":"True"], 'History'));
+  });
+  const seen = new Set(); const unique = [];
+  for(const item of pool){ if(!seen.has(item.q)){ seen.add(item.q); unique.push(item); } }
+  return unique;
+}
+
+/* ---------- Nigeria question pool ---------- */
+function ngQuestionPool(state, all){
+  const pool = [];
+  pool.push(mkQ(`What is the capital of ${state.name} State?`, state.capital, distractors(all,state.capital,'capital',3), 'Government'));
+  pool.push(mkQ(`${state.capital} is the capital of which Nigerian state?`, state.name, distractors(all,state.name,'name',3), 'Government'));
+  pool.push(mkQ(`Which geopolitical zone is ${state.name} State located in?`, state.zone, NG_ZONES.filter(z=>z!==state.zone), 'Geography'));
+  const coastalTruth = NG_COASTAL.includes(state.name) ? "True" : "False";
+  pool.push(mkQ(`True or False: ${state.name} State has an Atlantic coastline.`, coastalTruth, [coastalTruth==="True"?"False":"True"], 'Geography'));
+  pool.push(mkQ(`In what year was ${state.name} State created?`, String(state.creationYear), distractors(all,state.creationYear,'creationYear',3).map(String), 'Government & History'));
+  const zoneMates = all.filter(s=>s.zone===state.zone && s.name!==state.name);
+  if(zoneMates.length>0){
+    const correct = pick(zoneMates);
+    const wrongPool = all.filter(s=>s.zone!==state.zone);
+    pool.push(mkQ(`Which of these states is in the same geopolitical zone as ${state.name} (${state.zone})?`, correct.name, sampleN(wrongPool,3).map(s=>s.name), 'Geography'));
+  }
+  const boolOthers = shuffle(all.filter(s=>s.name!==state.name)).slice(0,4);
+  boolOthers.forEach(o=>{
+    const truth = o.zone===state.zone ? "True" : "False";
+    pool.push(mkQ(`True or False: ${o.name} State is in the same geopolitical zone as ${state.name} State.`, truth, [truth==="True"?"False":"True"], 'Geography'));
+  });
+  const yearOthers = shuffle(all.filter(s=>s.name!==state.name)).slice(0,4);
+  yearOthers.forEach(o=>{
+    const truth = o.creationYear < state.creationYear ? "True" : "False";
+    pool.push(mkQ(`True or False: ${o.name} State was created before ${state.name} State.`, truth, [truth==="True"?"False":"True"], 'Government & History'));
+  });
+  const seen = new Set(); const unique = [];
+  for(const item of pool){ if(!seen.has(item.q)){ seen.add(item.q); unique.push(item); } }
+  return unique;
+}
+
+/* ---------- Governor 20-question set: guarantees region-accurate
+   history/culture facts, NEVER mixes in the national hard bank. ---------- */
+function get20(state, country, all){
+  const isUS = country==='us';
+  const label = isUS ? state.name : (state.name+' State');
+  const pool = isUS ? factsPoolOf(US_STATES) : factsPoolOf(NG_STATES);
+  const facts = shuffle([...factForwardQs(state,pool,label), ...factBooleanQs(state,pool,label)]);
+  const templates = shuffle(isUS ? usQuestionPool(state, all) : ngQuestionPool(state, all));
+  const combined = [...facts.slice(0,10), ...templates];
+  const seen = new Set(); const unique = [];
+  for(const item of combined){ if(!seen.has(item.q)){ seen.add(item.q); unique.push(item); } }
+  // guarantee at least the fact-based ones survive, then top up with templates
+  const guaranteedFacts = facts.filter((f,idx,arr)=>seen.has(f.q)).slice(0,8);
+  const rest = unique.filter(u=>!guaranteedFacts.includes(u));
+  return shuffle([...guaranteedFacts, ...shuffle(rest).slice(0, 20-guaranteedFacts.length)]).slice(0,20);
+}
+
+function getPresidentQuestions(country){
+  const all = country==='us' ? US_STATES : NG_STATES;
+  const chosenStates = sampleN(all, 15);
+  const stateQs = chosenStates.map(st=>{
+    const set = get20(st, country, all);
+    return pick(set);
+  });
+  const hardBank = country==='us' ? HARD_US_BANK : HARD_NG_BANK;
+  const hardQs = sampleN(hardBank,5).map(h=>mkQ(h[0],h[1],h[2],'National History & Government',true));
+  const seen = new Set(); const unique = [];
+  for(const item of [...stateQs, ...hardQs]){ if(!seen.has(item.q)){ seen.add(item.q); unique.push(item); } }
+  return shuffle(unique).slice(0,20);
+}
+
+/* =========================================================
+   INCIDENTS — factual trivia tied to a governance scenario
+========================================================= */
+function buildIncident(row){
+  const [scenario, question, correct, wrongs, hard, explain] = row;
+  const q = mkQ(question, correct, wrongs, 'Incident', !!hard);
+  return { scenario, ...q, explain };
+}
+
+const GOV_INCIDENTS_US = [
+["The state legislature sends you a bill you strongly disagree with.","What is it called when a governor formally rejects a bill passed by the legislature?","Veto",["Filibuster","Impeachment","Recess appointment"],false,"A veto sends the bill back to the legislature, which may attempt to override it."],
+["A hurricane has devastated coastal communities and local resources are overwhelmed.","Which federal agency coordinates the U.S. government's disaster response?","FEMA",["The CIA","The IRS","The EPA"],false,"The Federal Emergency Management Agency leads federal disaster coordination."],
+["A seat on your state's supreme court has become vacant.","In most U.S. states, who typically has the power to appoint judges to fill vacant state court seats?","The Governor",["The President","The Mayor","The Senate Majority Leader"],false,"Most states give this appointment power to the governor, sometimes with legislative confirmation."],
+["Lawmakers are on recess, but an urgent matter can't wait.","What is it called when a governor calls the legislature back for an out-of-schedule session?","A special session",["A filibuster","A caucus","A continuing resolution"],false,"Special sessions let governors bring lawmakers back to address urgent business."],
+["Unrest breaks out in a major city and local police are stretched thin.","Which military force can a U.S. governor typically mobilize within their own state?","The National Guard",["The Marines","The Coast Guard","NATO forces"],false,"Governors serve as commander-in-chief of their state's National Guard."],
+["Term limits are being debated at a town hall.","What is the standard length of a gubernatorial term in most U.S. states?","4 years",["2 years","6 years","8 years"],false,"Most states use four-year terms, though a few (like New Hampshire) use two."],
+["A civics student asks you a tricky question about your own job security.","Which of these states is known for electing its governor to just a 2-year term?","New Hampshire",["Texas","California","Ohio"],true,"New Hampshire and Vermont are the only states with two-year gubernatorial terms."],
+["Allegations surface that could threaten your position.","What is the formal constitutional process for removing a sitting governor before their term ends called?","Impeachment",["Filibuster","Veto override","Redistricting"],false,"Like federal officials, governors can be impeached and removed for serious misconduct."],
+["The legislature and your office are debating who does what.","Which of these powers is typically held by a state legislature, not the governor?","Passing state laws",["Signing bills into law","Commanding the National Guard","Granting pardons"],false,"Legislatures write and pass laws; governors sign, veto, and enforce them."],
+["Budget season has arrived.","What is the document called that outlines a government's planned income and spending?","A budget",["A manifesto","A charter","A ledger"],false,"Budgets guide how public revenue is raised and spent each fiscal year."]
+];
+const GOV_INCIDENTS_NG = [
+["The State House of Assembly passes a controversial bill and sends it to you.","What is Nigeria's state-level legislative body called?","The State House of Assembly",["The National Assembly","The Senate","The Federal Executive Council"],false,"Each of Nigeria's states has its own House of Assembly responsible for state laws."],
+["A vacancy opens on the state's judicial bench.","Who has the power to appoint the Chief Judge of a Nigerian state, based on the State Judicial Service Commission's recommendation?","The State Governor",["The President","The Chief Justice of Nigeria","The Attorney General of the Federation"],false,"Governors appoint state chief judges, subject to State House of Assembly confirmation."],
+["Insecurity is rising and citizens are demanding you deploy more police.","Under Nigeria's constitution, which security force does a state governor NOT directly command?","The Nigeria Police Force",["Local vigilante groups","The state's Civil Defence Corps","State traffic officials"],true,"Policing in Nigeria is centralized under the federal government, a frequent subject of 'state police' debates."],
+["It's time to present your spending plans to lawmakers.","What is the document a Nigerian governor presents to the State House of Assembly outlining planned revenue and spending called?","The Appropriation Bill",["The Finance Act","The Electoral Act","The Constitution"],false,"Once passed and signed, the Appropriation Bill becomes the state's budget law."],
+["A journalist asks how long you get to serve if re-elected.","How many years is one term for a Nigerian state governor?","4 years",["3 years","5 years","6 years"],false,"Nigerian governors serve four-year terms, renewable once."],
+["Term limits come up again at a press briefing.","What is the maximum number of terms a Nigerian governor may serve under the 1999 Constitution?","Two terms",["One term","Three terms","Unlimited terms"],false,"Like the President, governors are limited to two four-year terms."],
+["Allegations of gross misconduct are levied against you.","What is the constitutional process for removing a sitting Nigerian governor for gross misconduct called?","Impeachment",["Recall","Court martial","A referendum"],false,"The State House of Assembly can impeach a governor for gross misconduct."],
+["Citizens ask why the Assembly keeps blocking your directives.","Which arm of state government is responsible for making state laws in Nigeria?","The State House of Assembly",["The Governor's office","The Judiciary","The state's electoral commission"],false,"Lawmaking is a legislative function, separate from the executive governor."],
+["A civics class visits the State House and asks about Nigeria's local government structure.","How many Local Government Areas (LGAs) does Nigeria have in total, across all states?","774",["500","900","360"],true,"Nigeria's 774 LGAs form the third tier of government below federal and state."],
+["Election season approaches.","Which body is responsible for organizing governorship elections in Nigeria?","INEC",["The State House of Assembly","The Ministry of Interior","The Nigeria Police Force"],false,"The Independent National Electoral Commission (INEC) conducts elections nationwide, including state polls."]
+];
+const PRES_INCIDENTS_US = [
+["A U.S. Supreme Court seat has become vacant.","Who has the constitutional power to appoint U.S. Supreme Court justices, subject to Senate confirmation?","The President",["The Speaker of the House","The Chief Justice","State governors"],false,"The President nominates justices; the Senate votes to confirm them."],
+["Congress is threatening to override your veto.","What fraction of Congress is needed to override a presidential veto?","Two-thirds of both chambers",["A simple majority","Three-fifths of the Senate only","Unanimous consent"],true,"Overriding a veto requires a two-thirds vote in both the House and Senate."],
+["Tensions rise and advisors debate a military response.","Under the U.S. Constitution, which branch holds the formal power to declare war?","Congress",["The President","The Supreme Court","The Department of Defense"],true,"Article I of the Constitution gives Congress, not the President alone, the power to declare war."],
+["You're assembling your Cabinet.","Which Cabinet position generally serves as the President's chief foreign policy advisor and diplomat?","Secretary of State",["Secretary of Defense","Attorney General","Secretary of the Treasury"],false,"The Secretary of State leads U.S. diplomacy and foreign relations."],
+["A reporter asks how long you could theoretically stay in office.","Under the 22nd Amendment, how many years can one person serve as President in the standard case?","8 years",["4 years","12 years","There is no limit"],false,"The 22nd Amendment limits presidents to two elected terms, or eight years."],
+["The House is drafting articles against you.","Which chamber of Congress holds the sole power to impeach a sitting President?","The House of Representatives",["The Senate","The Supreme Court","The Cabinet"],false,"The House impeaches; the Senate then holds the trial."],
+["A succession crisis hypothetical comes up in a briefing.","Which amendment established the modern presidential line of succession rules?","The 25th Amendment",["The 19th Amendment","The 22nd Amendment","The 14th Amendment"],true,"Ratified in 1967, the 25th Amendment addresses succession and presidential disability."],
+["Election night is approaching.","How many electoral votes are needed to win the U.S. presidency, out of 538 total?","270",["218","300","51"],false,"A majority of the 538 electoral votes — 270 — is required to win."],
+["You're preparing your annual address to Congress.","What is the President's official annual address to Congress called?","The State of the Union",["The Inaugural Address","A Fireside Chat","A Cabinet Briefing"],false,"Delivered each year, the State of the Union outlines the administration's priorities."],
+["A new international treaty is on the table.","Which body must ratify a treaty for the U.S. to formally join it?","The Senate, by a two-thirds vote",["The House, by simple majority","The President alone","State legislatures"],true,"Treaty ratification requires a two-thirds vote in the Senate."]
+];
+const PRES_INCIDENTS_NG = [
+["You're forming your federal executive team.","What is Nigeria's federal executive cabinet called?","The Federal Executive Council",["The National Assembly","The Council of State","The Senate"],false,"The Federal Executive Council (FEC) is chaired by the President and includes government ministers."],
+["The National Assembly sends you a bill you oppose.","What is it called when a Nigerian President formally withholds assent from a bill?","A veto",["A filibuster","An impeachment","A prorogation"],false,"Withholding assent acts as a veto, though the National Assembly can override it by a two-thirds vote."],
+["Tensions with a neighboring country are escalating.","Under Nigeria's Constitution, whose approval is required before Nigeria can formally declare war?","The National Assembly",["The President alone","The Supreme Court","The Service Chiefs"],true,"A declaration of war requires National Assembly approval under the 1999 Constitution."],
+["You're picking ministers for your Cabinet.","Nigeria's constitution requires the President to appoint at least one minister from how many of the 36 states?","Every state (all 36)",["Half the states","10 states","Only the President's home state"],true,"This 'Federal Character' principle requires at least one minister per state."],
+["A reporter asks how long you could serve in total.","How many four-year terms can a Nigerian President serve at most?","Two terms",["One term","Three terms","Unlimited terms"],false,"Like state governors, the President is limited to two four-year terms."],
+["The National Assembly is unhappy with your conduct.","Which body has the power to impeach a sitting Nigerian President?","The National Assembly",["The Supreme Court","INEC","The Council of State"],false,"The National Assembly can remove a President through impeachment for gross misconduct."],
+["A historian visits the villa to discuss Nigeria's political evolution.","Nigeria transitioned from a parliamentary to a presidential system of government in which year?","1979",["1960","1999","1966"],true,"The 1979 Constitution introduced the U.S.-style presidential system for the Second Republic."],
+["A trivia-loving aide quizzes you on your predecessors.","Who was Nigeria's first executive President, under the 1979 Constitution?","Shehu Shagari",["Nnamdi Azikiwe","Olusegun Obasanjo","Ibrahim Babangida"],true,"Shehu Shagari became Nigeria's first executive President in October 1979."],
+["You're preparing remarks for Democracy Day.","In what year did Nigeria return to civilian rule, beginning the current Fourth Republic?","1999",["1993","1979","2007"],false,"Nigeria's Fourth Republic began in 1999 after years of military governance."],
+["The National Assembly convenes for a joint session.","What is the upper chamber of Nigeria's National Assembly called?","The Senate",["The House of Representatives","The Federal Executive Council","The Council of State"],false,"The Senate is the upper chamber; the House of Representatives is the lower chamber."]
+];
+
+/* =========================================================
+   STATE
+========================================================= */
+let G = { country:null, office:null, stateObj:null, experience:0, term:1, questions:[], qIndex:0, correct:0, incidentQueue:[], incidentIndex:0, incidentGains:0, lastResult:null };
+
+const card = document.getElementById('card');
+const hud = document.getElementById('hud');
+const hudTag = document.getElementById('hudTag');
+const footerLinks = document.getElementById('footerLinks');
+
+function setBodyCountry(){ document.body.classList.toggle('country-ng', G.country==='ng'); }
+function officeLabel(){ return G.office==='president' ? 'President' : 'Governor'; }
+function countryLabel(){ return G.country==='us' ? 'United States' : 'Nigeria'; }
+function countryFlag(){ return G.country==='us' ? '🇺🇸' : '🇳🇬'; }
+function renderHud(){
+  hud.innerHTML='';
+  if(!G.country){ hudTag.textContent='🗳️ Campaign Simulator'; return; }
+  hudTag.textContent = countryFlag()+' '+countryLabel() + (G.office? ' · '+officeLabel():'');
+  const chips = [];
+  if(G.stateObj) chips.push(`📍 Region: <b>${G.stateObj.name}</b>`);
+  if(G.office) chips.push(`🎖️ Term: <b>${G.term}</b>`);
+  chips.push(`📊 Experience: <b>${G.experience}</b>`);
+  hud.innerHTML = chips.map(c=>`<div class="chip">${c}</div>`).join('');
+}
+function fullRestart(){
+  G = { country:null, office:null, stateObj:null, experience:0, term:1, questions:[], qIndex:0, correct:0, incidentQueue:[], incidentIndex:0, incidentGains:0, lastResult:null };
+  document.body.classList.remove('country-ng');
+  screenMenu();
+}
+
+const WEIGHTS = {
+  governor: { trivia: 1.00, exp: 0.35, oppMin:35, oppMax:80 },
+  president:{ trivia: 0.55, exp: 0.65, oppMin:45, oppMax:92 }
+};
+
+function screenMenu(){
+  G.country=null; G.office=null; G.stateObj=null;
+  renderHud(); footerLinks.innerHTML='';
+  card.innerHTML = `
+    <div class="eyebrow"><span>🗳️ WELCOME</span><span>IN POWER</span></div>
+    <h2 class="title">Choose your country</h2>
+    <p class="lede">Answer trivia to win elections. Govern well to build your experience score. Rise from Governor to President — but remember, trivia alone won't carry you at the top.</p>
+    <div class="btn-grid">
+      <button class="btn gold" onclick="chooseCountry('us')">🇺🇸 United States <small>50 states</small></button>
+      <button class="btn gold" onclick="chooseCountry('ng')">🇳🇬 Nigeria <small>36 states</small></button>
+    </div>
+  `;
+}
+function chooseCountry(c){ G.country=c; setBodyCountry(); screenOffice(); }
+function screenOffice(){
+  renderHud();
+  card.innerHTML = `
+    <div class="eyebrow"><span>${countryFlag()} ${countryLabel().toUpperCase()}</span><span>STEP 1 OF 2</span></div>
+    <h2 class="title">Choose your race</h2>
+    <p class="lede">Run for regional office first, or launch straight into a national campaign — though without experience, the national trail is unforgiving.</p>
+    <div class="btn-grid">
+      <button class="btn" onclick="chooseOffice('governor')">🏛️ Run for Governor <small>20 region-specific questions</small></button>
+      <button class="btn" onclick="chooseOffice('president')">🎖️ Run for President <small>20 questions from across the nation</small></button>
+      <button class="btn outline" onclick="screenMenu()">◀ Back</button>
+    </div>
+  `;
+}
+function chooseOffice(office){ G.office = office; if(office==='governor'){ screenStatePick(); } else { startPresidentElection(); } }
+function screenStatePick(){
+  renderHud();
+  const list = G.country==='us' ? US_STATES : NG_STATES;
+  const meta = G.country==='us' ? US_REGION_META : NG_ZONE_META;
+  const key = G.country==='us' ? 'region' : 'zone';
+  const groups = {};
+  list.forEach(s=>{ (groups[s[key]] = groups[s[key]]||[]).push(s); });
+  const order = G.country==='us' ? US_REGIONS : NG_ZONES;
+  const blocks = order.map(zone=>{
+    const m = meta[zone] || {emoji:'📍',color:'#ded4b6'};
+    const items = groups[zone].map(s=>`<button onclick='pickState("${s.name.replace(/'/g,"\\'")}")'>${s.name}</button>`).join('');
+    return `<div class="zone-block"><div class="zone-head" style="--zonecolor:${m.color}">${m.emoji} ${zone}</div><div class="state-grid">${items}</div></div>`;
+  }).join('');
+  card.innerHTML = `
+    <div class="eyebrow"><span>${countryFlag()} ${countryLabel().toUpperCase()}</span><span>STEP 2 OF 2</span></div>
+    <h2 class="title">🗺️ Pick your region</h2>
+    <p class="lede">Every question in this race is specific to your chosen region — its history, government, and culture.</p>
+    <div class="map-scroll">${blocks}</div>
+    <div class="btn-grid"><button class="btn outline" onclick="screenOffice()">◀ Back</button></div>
+  `;
+}
+function pickState(name){
+  const list = G.country==='us' ? US_STATES : NG_STATES;
+  G.stateObj = list.find(s=>s.name===name);
+  startGovernorElection();
+}
+function startGovernorElection(){
+  const all = G.country==='us' ? US_STATES : NG_STATES;
+  G.questions = get20(G.stateObj, G.country, all);
+  G.qIndex = 0; G.correct = 0;
+  renderHud(); screenQuestion();
+}
+function startPresidentElection(){
+  G.stateObj = null;
+  G.questions = getPresidentQuestions(G.country);
+  G.qIndex = 0; G.correct = 0;
+  renderHud(); screenQuestion();
+}
+function screenQuestion(){
+  renderHud();
+  const total = G.questions.length;
+  const q = G.questions[G.qIndex];
+  const pct = Math.round((G.qIndex/total)*100);
+  const letters = ['A','B','C','D'];
+  card.innerHTML = `
+    <div class="eyebrow"><span>${G.office==='governor'?('🏛️ CAMPAIGN · '+G.stateObj.name).toUpperCase():('🎖️ NATIONAL CAMPAIGN')}</span><span>ISSUE ${String(G.qIndex+1).padStart(2,'0')}/${total}</span></div>
+    <div class="progress-row">
+      <div class="qnum">${G.qIndex}/${total} answered</div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    ${q.hard?'<span class="hard-tag">🔥 Hard</span>':''}<span class="cat-tag">${q.cat}</span>
+    <div class="question-text">${q.q}</div>
+    <div class="choices" id="choicesWrap">
+      ${q.choices.map((c,i)=>`<button class="choice" data-i="${i}" onclick="answerQuestion(${i})"><span class="letter">${letters[i]}</span><span>${c}</span></button>`).join('')}
+    </div>
+    <div id="feedbackArea"></div>
+  `;
+}
+function answerQuestion(i){
+  const q = G.questions[G.qIndex];
+  const wrap = document.getElementById('choicesWrap');
+  const buttons = wrap.querySelectorAll('.choice');
+  buttons.forEach(b=>b.disabled=true);
+  const correctI = q.answer;
+  buttons[correctI].classList.add('correct');
+  if(i!==correctI) buttons[i].classList.add('wrong');
+  const isRight = i===correctI;
+  if(isRight) G.correct++;
+  document.getElementById('feedbackArea').innerHTML = `
+    <div class="feedback-banner">${isRight?'✅ Correct.':'❌ Not quite. Correct answer: '+q.choices[correctI]}</div>
+    <div class="next-row"><button class="btn gold" style="display:inline-flex;width:auto;" onclick="nextQuestion()">${G.qIndex+1<G.questions.length?'Next issue →':'See results →'}</button></div>
+  `;
+}
+function nextQuestion(){
+  G.qIndex++;
+  if(G.qIndex>=G.questions.length){ runElectionResult(); } else { screenQuestion(); }
+}
+function runElectionResult(){
+  const w = WEIGHTS[G.office];
+  const triviaScore = (G.correct/G.questions.length)*100;
+  const expBonus = Math.min(G.experience,100)*w.exp;
+  const playerTotal = triviaScore*w.trivia + expBonus;
+  const oppTrivia = w.oppMin + Math.random()*(w.oppMax-w.oppMin);
+  const oppTotal = oppTrivia;
+  let youShare = (playerTotal/(playerTotal+oppTotal))*100;
+  youShare = Math.max(6, Math.min(94, youShare));
+  const oppShare = 100-youShare;
+  const win = youShare > 50;
+  G.lastResult = { triviaScore, win, youShare, oppShare };
+  renderHud(); footerLinks.innerHTML='';
+  const raceLabel = G.office==='governor' ? `Governor of ${G.stateObj.name}` : `President of ${countryLabel()}`;
+  card.innerHTML = `
+    <div class="eyebrow"><span>🗳️ ELECTION NIGHT</span><span>${raceLabel.toUpperCase()}</span></div>
+    <h2 class="title">Results are in</h2>
+    <div class="weight-note">${G.office==='president'?'⚖️ Presidential races weigh trivia at 55% and experience at up to 65% — raw knowledge alone rarely wins here.':'⚖️ Trivia carries full weight in local races, with experience adding a boost on top.'}</div>
+    <div class="tally-wrap" id="tallyWrap">${tallyRowHTML('YOU', 0, 'you')}${tallyRowHTML('OPPONENT', 0, 'opp')}</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="label">Trivia score</div><div class="value">${Math.round(triviaScore)}%</div></div>
+      <div class="stat-box"><div class="label">Experience bonus</div><div class="value">+${Math.round(expBonus)}</div></div>
+      <div class="stat-box"><div class="label">Correct answers</div><div class="value">${G.correct}/${G.questions.length}</div></div>
+    </div>
+    <div id="resultBannerWrap"></div>
+    <div class="btn-grid" id="postResultActions"></div>
+  `;
+  animateTally(Math.round(youShare), Math.round(oppShare), ()=>{
+    document.getElementById('resultBannerWrap').innerHTML = `<div class="result-banner ${win?'win':'lose'}">${win?'🎉 Victory!':'💔 Defeat'}</div>`;
+    if(win) fireConfetti();
+    renderPostResultActions(win);
+  });
+}
+function tallyRowHTML(name, pct, cls){
+  return `<div class="tally-row"><div class="tally-name">${name}</div><div class="flap-set" id="flap-${cls}">${flapDigitsHTML(0)}</div><span class="pct-sign">%</span><div class="bar-track"><div class="bar-fill ${cls}" id="bar-${cls}" style="width:0%"></div></div></div>`;
+}
+function flapDigitsHTML(n){ const s = String(n).padStart(2,'0'); return `<div class="flap">${s[0]}</div><div class="flap">${s[1]}</div>`; }
+function setFlap(cls, n){ const wrap = document.getElementById('flap-'+cls); const s = String(n).padStart(2,'0'); wrap.innerHTML = `<div class="flap flip">${s[0]}</div><div class="flap flip">${s[1]}</div>`; }
+function animateTally(youTarget, oppTarget, done){
+  let step=0; const steps=20;
+  const timer = setInterval(()=>{
+    step++;
+    const y = Math.min(Math.round((youTarget/steps)*step),youTarget);
+    const o = Math.min(Math.round((oppTarget/steps)*step),oppTarget);
+    setFlap('you', y); setFlap('opp', o);
+    document.getElementById('bar-you').style.width = y+'%';
+    document.getElementById('bar-opp').style.width = o+'%';
+    if(step>=steps){ clearInterval(timer); done && done(); }
+  }, 45);
+}
+function renderPostResultActions(win){
+  const wrap = document.getElementById('postResultActions');
+  if(win){ wrap.innerHTML = `<button class="btn gold" onclick="startOfficeTerm()">🏛️ Take office →</button>`; }
+  else { wrap.innerHTML = `<button class="btn" onclick="retryElection()">🔁 Run again next cycle</button><button class="btn outline" onclick="fullRestart()">Start a new career</button>`; }
+}
+function retryElection(){ if(G.office==='governor') startGovernorElection(); else startPresidentElection(); }
+function startOfficeTerm(){
+  const rows = G.office==='governor' ? (G.country==='us'?GOV_INCIDENTS_US:GOV_INCIDENTS_NG) : (G.country==='us'?PRES_INCIDENTS_US:PRES_INCIDENTS_NG);
+  G.incidentQueue = sampleN(rows,3).map(buildIncident);
+  G.incidentIndex = 0; G.incidentGains = 0;
+  renderHud(); screenIncident();
+}
+function screenIncident(){
+  renderHud();
+  const total = G.incidentQueue.length;
+  const inc = G.incidentQueue[G.incidentIndex];
+  const letters = ['A','B','C','D'];
+  card.innerHTML = `
+    <div class="eyebrow"><span>${officeLabel().toUpperCase()} · TERM ${G.term}</span><span>INCIDENT ${G.incidentIndex+1}/${total}</span></div>
+    <span class="incident-tag">📰 In Office</span> ${inc.hard?'<span class="hard-tag">🔥 Hard</span>':''}
+    <div class="scenario-box">${inc.scenario}</div>
+    <div class="question-text">${inc.q}</div>
+    <div class="choices" id="incidentChoices">
+      ${inc.choices.map((c,i)=>`<button class="choice" data-i="${i}" onclick="answerIncident(${i})"><span class="letter">${letters[i]}</span><span>${c}</span></button>`).join('')}
+    </div>
+    <div id="incidentFeedback"></div>
+  `;
+}
+function answerIncident(i){
+  const inc = G.incidentQueue[G.incidentIndex];
+  const buttons = document.querySelectorAll('#incidentChoices .choice');
+  buttons.forEach(b=>b.disabled=true);
+  const correctI = inc.answer;
+  buttons[correctI].classList.add('correct');
+  if(i!==correctI) buttons[i].classList.add('wrong');
+  const isRight = i===correctI;
+  const gain = isRight ? (inc.hard?22:15) : 0;
+  G.experience = Math.max(0, Math.min(100, G.experience + gain));
+  G.incidentGains += gain;
+  renderHud();
+  document.getElementById('incidentFeedback').innerHTML = `
+    <div class="feedback-banner">${isRight?'✅ Correct — you handled it knowledgeably.':'❌ Not quite. Correct answer: '+inc.choices[correctI]} <b>(${gain>=0?'+':''}${gain} experience)</b><br>${inc.explain}</div>
+    <div class="xp-track"><div class="xp-fill" style="width:${G.experience}%"></div></div>
+    <div class="next-row"><button class="btn gold" style="display:inline-flex;width:auto;" onclick="nextIncident()">${G.incidentIndex+1<G.incidentQueue.length?'Next incident →':'End of term →'}</button></div>
+  `;
+}
+function nextIncident(){
+  G.incidentIndex++;
+  if(G.incidentIndex>=G.incidentQueue.length){ screenTermSummary(); } else { screenIncident(); }
+}
+function screenTermSummary(){
+  renderHud();
+  const canRunHigher = G.office==='governor';
+  card.innerHTML = `
+    <div class="eyebrow"><span>${officeLabel().toUpperCase()}</span><span>END OF TERM ${G.term}</span></div>
+    <h2 class="title">📋 Term complete</h2>
+    <p class="lede">Your grasp of ${G.incidentQueue.length} governance questions shaped your record in office.</p>
+    <div class="stat-row">
+      <div class="stat-box"><div class="label">Term experience gained</div><div class="value">${G.incidentGains>=0?'+':''}${G.incidentGains}</div></div>
+      <div class="stat-box"><div class="label">Total experience</div><div class="value">${G.experience}</div></div>
+    </div>
+    <h2 class="title" style="font-size:19px;margin-top:22px;">What's next?</h2>
+    <div class="btn-grid">
+      <button class="btn gold" onclick="runAgainSameOffice()">🔁 Run for re-election as ${officeLabel()} <small>Experience carries into your score</small></button>
+      ${canRunHigher ? `<button class="btn" onclick="runForHigherOffice()">🎖️ Run for President <small>Trivia counts for less up here — lean on experience</small></button>` : ''}
+      <button class="btn outline" onclick="retireCareer()">🏁 Retire <small>End your career and see your legacy</small></button>
+    </div>
+  `;
+}
+function runAgainSameOffice(){ G.term++; if(G.office==='governor') startGovernorElection(); else startPresidentElection(); }
+function runForHigherOffice(){ G.office='president'; G.term=1; startPresidentElection(); }
+function retireCareer(){
+  renderHud(); footerLinks.innerHTML='';
+  const rank = G.experience>=80 ? 'Statesman of the People' : G.experience>=50 ? 'Respected Public Servant' : G.experience>=20 ? 'Steady Hand' : 'Career Politician';
+  card.innerHTML = `
+    <div class="eyebrow"><span>🏁 CAREER RETROSPECTIVE</span><span>${countryFlag()} ${countryLabel().toUpperCase()}</span></div>
+    <h2 class="title">Thank you for your service</h2>
+    <p class="lede">You leave office as ${officeLabel()}${G.stateObj?' of '+G.stateObj.name:''} after ${G.term} term${G.term>1?'s':''}, remembered as a <b>${rank}</b>.</p>
+    <div class="stat-row">
+      <div class="stat-box"><div class="label">Final experience score</div><div class="value">${G.experience}</div></div>
+      <div class="stat-box"><div class="label">Highest office</div><div class="value" style="font-size:17px;">${officeLabel()}</div></div>
+    </div>
+    <div class="btn-grid"><button class="btn gold" onclick="fullRestart()">🔄 Start a new career</button></div>
+  `;
+}
+const confettiCanvas = document.getElementById('confetti');
+const ctx = confettiCanvas.getContext('2d');
+function resizeConfetti(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
+window.addEventListener('resize', resizeConfetti); resizeConfetti();
+function fireConfetti(){
+  const colors = ['#C9A227','#e0bb45','#2F6E5B','#F2ECDD','#B23A2F'];
+  const pieces = Array.from({length:120}, ()=>({ x: Math.random()*confettiCanvas.width, y: -20-Math.random()*200, vx: (Math.random()-0.5)*3, vy: 2+Math.random()*3, size: 4+Math.random()*5, color: colors[Math.floor(Math.random()*colors.length)], rot: Math.random()*360, vr: (Math.random()-0.5)*10 }));
+  let frame=0;
+  function tick(){
+    ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    frame++; let alive=false;
+    pieces.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      if(p.y<confettiCanvas.height+20) alive=true;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180); ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6); ctx.restore();
+    });
+    if(alive && frame<220) requestAnimationFrame(tick); else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  }
+  tick();
+}
+screenMenu();
+</script>
+</body>
+</html>
