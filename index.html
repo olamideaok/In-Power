@@ -124,7 +124,7 @@
 <div class="frame">
   <div class="masthead">
     <h1>IN <span>POWER</span></h1>
-    <div class="tag" id="hudTag">🗳️ Campaign Simulator</div>
+    <div class="tag" id="hudTag">🗳️ Campaign Simulator v2.2</div>
   </div>
   <div class="hud" id="hud"></div>
   <div class="card" id="card"></div>
@@ -609,7 +609,7 @@ function localKey(stateName, locality){ return `${stateName}::${locality}`; }
 const LOCAL_QUESTION_BANK_NG = {
   [localKey("Lagos","Ikeja")]: [
     ["Ikeja, the seat of the Lagos State government, is home to which major international airport?","Murtala Muhammed International Airport",["Nnamdi Azikiwe International Airport","Port Harcourt International Airport","Mallam Aminu Kano International Airport"]],
-    ["Ikeja has served as the capital of Lagos State since the state's creation in which year?","1967",["1976","1991","1960"]]
+    ["Ikeja has served as the capital of Lagos State since the state's creation in which year?","1967",["1976","1991","1960"]],
     ["What is the capital of Lagos State?","Ikeja",["Lagos Island","Lekki","Badagry"]],
 ["In which state is Ikeja located?","Lagos State",["Ogun State","Oyo State","Osun State"]],
 ["What geopolitical zone of Nigeria is Ikeja located in?","South West",["South East","South South","North Central"]],
@@ -1305,7 +1305,6 @@ function autoLocalIdentityQuestions(stateObj, locality, all){
    ============================================================================ */
 const STATE_QUESTION_BANK_NG = {
   "Lagos": [
-    ["Lagos served as Nigeria's federal capital until the seat of government moved to Abuja. In what year did that move happen?","1991",["1976","1999","1960"]]
     ["Lagos served as Nigeria's federal capital until the seat of government moved to Abuja. In what year did that move happen?","1991",["1976","1999","1960"]],
 ["What is the capital of Lagos State?","Ikeja",["Lagos Island","Badagry","Epe"]],
 ["In what year was Lagos State created?","1967",["1960","1976","1979"]],
@@ -1691,7 +1690,7 @@ const NATIONAL_QUESTION_BANK_NG = [
 ["Nigeria's civil war, also known as the Biafran War, lasted from 1967 until which year?","1970",["1966","1975","1979"]],
 ["In what year did playwright Wole Soyinka become the first African to win the Nobel Prize in Literature?","1986",["1991","1960","2001"]],
 ["How many geopolitical zones is Nigeria traditionally divided into?","6",["4","8","5"]],
-["Nigeria adopted a U.S.-style presidential system of government in which year?","1979",["1960","1999","1966"]]
+["Nigeria adopted a U.S.-style presidential system of government in which year?","1979",["1960","1999","1966"]],
 ["What is the capital city of Nigeria?","Abuja",["Lagos","Kano","Ibadan"]],
 ["What is the largest city in Nigeria by population?","Lagos",["Abuja","Kano","Ibadan"]],
 ["How many states are there in Nigeria?","36",["30","32","38"]],
@@ -2404,7 +2403,7 @@ function screenMenu(){
   G.country=null; G.office=null; G.stateObj=null;
   renderHud(); footerLinks.innerHTML='';
   card.innerHTML = `
-    <div class="eyebrow"><span>🗳️ WELCOME</span><span>IN POWER</span></div>
+    <div class="eyebrow"><span>🗳️ WELCOME</span><span>IN POWER v2.2</span></div>
     <h2 class="title">Choose your country</h2>
     <p class="lede">Your political career starts with a conversation, not a ballot. Answer trivia, build experience, and climb from local office to the presidency — though trivia alone won't carry you at the top.</p>
     <div class="btn-grid">
