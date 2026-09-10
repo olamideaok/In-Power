@@ -5,118 +5,205 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>In Power — Story Mode</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0B1E3D; --ink-2:#122a52; --parchment:#F2ECDD; --parchment-2:#e8e0cb;
-    --gold:#C9A227; --gold-2:#e0bb45; --red:#B23A2F; --green:#2F6E5B; --blue:#2E5C8A;
-    --accent: var(--gold); --accent-2: var(--gold-2); --text-ink:#1c2536; --radius: 4px;
+    --ink:#080B1A; --ink-2:#111631; --ink-3:#1a2147;
+    --parchment:#F6EFDD; --parchment-2:#ece0c4;
+    --gold:#CBA135; --gold-2:#F2D583; --gold-3:#8a6a1a;
+    --red:#A6314B; --green:#1F6F54; --blue:#2C4A7C; --violet:#6C4F94;
+    --accent: var(--gold); --accent-2: var(--gold-2); --accent-3: var(--gold-3);
+    --text-ink:#1c2536; --radius: 8px;
+    --shadow-lg: 0 30px 70px rgba(0,0,0,0.55), 0 2px 0 var(--accent) inset;
   }
-  body.country-ng{ --accent: var(--green); --accent-2:#3d8d75; }
+  body.country-ng{ --accent: var(--green); --accent-2:#4fae8f; --accent-3:#123f31; }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background: var(--ink);
     background-image:
-      radial-gradient(circle at 15% 10%, rgba(201,162,39,0.10), transparent 40%),
-      radial-gradient(circle at 85% 90%, rgba(201,162,39,0.08), transparent 45%),
+      radial-gradient(circle at 12% 8%, rgba(203,161,53,0.16), transparent 42%),
+      radial-gradient(circle at 88% 14%, rgba(108,79,148,0.14), transparent 46%),
+      radial-gradient(circle at 20% 92%, rgba(44,74,124,0.18), transparent 45%),
+      radial-gradient(circle at 90% 88%, rgba(203,161,53,0.10), transparent 40%),
       repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 26px);
+    background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, auto;
+    animation: bgDrift 26s ease-in-out infinite;
     color: var(--parchment); font-family:'Source Serif 4', serif; min-height:100vh;
     display:flex; align-items:flex-start; justify-content:center; padding: 28px 14px 60px;
     transition: background 0.6s ease;
   }
+  @keyframes bgDrift{
+    0%{ background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0 0; }
+    50%{ background-position: 30% 20%, 70% 30%, 20% 80%, 80% 70%, 0 0; }
+    100%{ background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0 0; }
+  }
   .frame{ width:100%; max-width:800px; }
-  .masthead{ display:flex; align-items:baseline; justify-content:space-between; border-bottom: 2px solid var(--accent); padding-bottom:10px; margin-bottom:18px; }
-  .masthead h1{ font-family:'Oswald',sans-serif; font-weight:700; letter-spacing:2px; font-size:30px; margin:0; text-transform:uppercase; color: var(--parchment); }
-  .masthead h1 span{ color: var(--accent); }
-  .masthead .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; color:#9fb0cc; text-transform:uppercase; }
-  .hud{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; }
-  .hud .chip{ border:1px solid rgba(242,236,221,0.25); padding:5px 10px; border-radius:2px; letter-spacing:0.5px; color:#cfd9ee; background:rgba(255,255,255,0.03); }
+  .masthead{ display:flex; align-items:baseline; justify-content:space-between; border-bottom: 2px solid var(--accent); padding-bottom:10px; margin-bottom:18px; position:relative; }
+  .masthead::after{ content:''; position:absolute; left:0; bottom:-2px; height:2px; width:64px; background: linear-gradient(90deg, var(--accent-2), transparent); animation: sweepUnderline 3.2s ease-in-out infinite; }
+  @keyframes sweepUnderline{ 0%{ left:0; opacity:0.9; } 48%{ left:calc(100% - 64px); opacity:1; } 52%{ opacity:1; } 100%{ left:0; opacity:0.9; } }
+  .masthead h1{
+    font-family:'Fraunces', serif; font-weight:600; font-style:normal; font-optical-sizing:auto;
+    letter-spacing:0.5px; font-size:34px; margin:0; text-transform:uppercase; color: var(--parchment);
+    font-variation-settings: "SOFT" 20, "WONK" 1;
+  }
+  .masthead h1 span{
+    background: linear-gradient(100deg, var(--accent-3) 0%, var(--accent-2) 25%, var(--accent) 50%, var(--accent-2) 75%, var(--accent-3) 100%);
+    background-size: 300% auto; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: goldShimmer 6s linear infinite; font-style:italic;
+  }
+  @keyframes goldShimmer{ 0%{ background-position: 0% 50%; } 100%{ background-position: 300% 50%; } }
+  .masthead .tag{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; color:#a9b8dc; text-transform:uppercase; }
+  .hud{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; font-family:'JetBrains Mono',monospace; font-size:11px; }
+  .hud .chip{
+    border:1px solid rgba(242,236,221,0.22); padding:5px 10px; border-radius:20px; letter-spacing:0.5px; color:#d3dcf2;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015));
+    backdrop-filter: blur(6px); animation: chipIn 0.45s ease backwards;
+  }
+  .hud .chip:nth-child(1){ animation-delay: 0.02s; } .hud .chip:nth-child(2){ animation-delay: 0.08s; }
+  .hud .chip:nth-child(3){ animation-delay: 0.14s; } .hud .chip:nth-child(4){ animation-delay: 0.2s; }
+  @keyframes chipIn{ from{ opacity:0; transform:translateY(-6px) scale(0.92); } to{ opacity:1; transform:translateY(0) scale(1); } }
   .hud .chip b{ color: var(--accent-2); }
-  .card{ background: var(--parchment); color: var(--text-ink); border-radius: var(--radius); padding: 28px 28px 24px; box-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 2px 0 var(--accent) inset; position:relative; animation: rise 0.4s ease; }
-  @keyframes rise{ from{ opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
-  .eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color: var(--red); margin-bottom:8px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
-  h2.title{ font-family:'Oswald',sans-serif; font-size:25px; margin:0 0 12px; line-height:1.15; text-transform:uppercase; letter-spacing:0.5px; }
-  p.lede{ font-size:15.5px; line-height:1.5; color:#3a3428; margin:0 0 18px; }
+  .card{
+    background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-2) 100%);
+    color: var(--text-ink); border-radius: var(--radius); padding: 30px 30px 26px;
+    box-shadow: var(--shadow-lg); position:relative; overflow:hidden;
+    animation: rise 0.5s cubic-bezier(.22,1,.36,1);
+  }
+  .card::before{
+    content:''; position:absolute; inset:0 0 auto 0; height:3px;
+    background: linear-gradient(90deg, var(--accent-3), var(--accent-2), var(--violet), var(--accent-2), var(--accent-3));
+    background-size:200% auto; animation: goldShimmer 5s linear infinite;
+  }
+  .card.card-enter{ animation: rise 0.5s cubic-bezier(.22,1,.36,1); }
+  @keyframes rise{ from{ opacity:0; transform:translateY(18px) scale(0.985);} to{opacity:1; transform:translateY(0) scale(1);} }
+  .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color: var(--red); margin-bottom:8px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  h2.title{ font-family:'Fraunces',serif; font-weight:600; font-size:27px; margin:0 0 12px; line-height:1.15; text-transform:uppercase; letter-spacing:0.3px; }
+  p.lede{ font-size:15.5px; line-height:1.55; color:#3a3428; margin:0 0 18px; }
   .btn-grid{ display:grid; gap:10px; }
-  .btn{ font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:0.4px; text-transform:uppercase; background: var(--ink); color: var(--parchment); border:none; padding:14px 18px; border-radius:2px; cursor:pointer; text-align:left; display:flex; justify-content:space-between; align-items:center; transition: transform 0.12s ease, background 0.15s ease; border-left: 4px solid var(--accent); }
-  .btn:hover{ background: var(--ink-2); transform: translateX(3px); }
+  .btn{
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; letter-spacing:0.4px; text-transform:uppercase;
+    background: var(--ink); color: var(--parchment); border:none; padding:14px 18px; border-radius:6px; cursor:pointer;
+    text-align:left; display:flex; justify-content:space-between; align-items:center;
+    transition: transform 0.16s ease, box-shadow 0.2s ease, background 0.15s ease;
+    border-left: 4px solid var(--accent); position:relative; overflow:hidden;
+  }
+  .btn::after{
+    content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.22), transparent);
+    transform: skewX(-20deg); transition: left 0.55s ease;
+  }
+  .btn:hover{ background: var(--ink-2); transform: translateX(3px); box-shadow: 0 6px 18px rgba(0,0,0,0.28); }
+  .btn:hover::after{ left: 130%; }
   .btn:active{ transform: translateX(1px) scale(0.99); }
-  .btn small{ font-family:'IBM Plex Mono',monospace; font-size:11px; opacity:0.65; text-transform:none;}
-  .btn.gold{ background: var(--accent); color: var(--ink); border-left-color: var(--ink);}
-  .btn.gold:hover{ background: var(--accent-2); }
+  .btn small{ font-family:'JetBrains Mono',monospace; font-weight:400; font-size:11px; opacity:0.65; text-transform:none;}
+  .btn.gold{ background: linear-gradient(120deg, var(--accent-3), var(--accent), var(--accent-2)); background-size:220% auto; color: var(--ink); border-left-color: var(--ink); animation: goldPulseBg 5s ease infinite; }
+  @keyframes goldPulseBg{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+  .btn.gold:hover{ box-shadow: 0 8px 24px rgba(203,161,53,0.35); }
   .btn.outline{ background:transparent; color: var(--text-ink); border:1px solid #c9c2ab; border-left:4px solid var(--accent);}
   .btn.outline:hover{ background:rgba(0,0,0,0.04); }
   .zone-block{ margin-bottom:14px; }
-  .zone-head{ display:flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#5c5340; margin-bottom:6px; padding:4px 8px; border-radius:2px; background: var(--zonecolor,#ded4b6); }
+  .zone-head{ display:flex; align-items:center; gap:8px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:#5c5340; margin-bottom:6px; padding:5px 9px; border-radius:6px; background: var(--zonecolor,#ded4b6); }
   .state-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(108px,1fr)); gap:7px; }
-  .state-grid button{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:9px 6px; border-radius:2px; border:1px solid #c9c2ab; background:#fbf8f0; cursor:pointer; color:#3a3428; transition:all .12s ease; }
-  .state-grid button:hover{ background:var(--ink); color:var(--parchment); border-color:var(--ink); }
+  .state-grid button{ font-family:'JetBrains Mono',monospace; font-size:11.5px; padding:9px 6px; border-radius:6px; border:1px solid #c9c2ab; background:#fbf8f0; cursor:pointer; color:#3a3428; transition:all .15s ease; }
+  .state-grid button:hover{ background:var(--ink); color:var(--parchment); border-color:var(--ink); transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,0.2); }
   .map-scroll{ max-height:390px; overflow-y:auto; padding-right:4px; margin-bottom:10px; }
   .progress-row{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
-  .progress-track{ flex:1; height:7px; background:#ddd5bd; border-radius:4px; overflow:hidden; }
-  .progress-fill{ height:100%; background: var(--red); transition: width 0.35s ease; }
-  .qnum{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7a705a; white-space:nowrap; }
-  .question-text{ font-family:'Oswald',sans-serif; font-size:20px; line-height:1.3; margin: 4px 0 18px; color:#1c2536; }
-  .hard-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; background: var(--red); color:#fff; padding:3px 8px; border-radius:10px; margin-bottom:8px; }
-  .cat-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; background:#e4dcc2; color:#5c5340; padding:3px 8px; border-radius:10px; margin-bottom:8px; margin-right:6px; }
+  .progress-track{ flex:1; height:8px; background:#ddd5bd; border-radius:6px; overflow:hidden; }
+  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--red), #d1604a); background-size:200% auto; transition: width 0.4s cubic-bezier(.22,1,.36,1); animation: goldPulseBg 3s ease infinite; }
+  .qnum{ font-family:'JetBrains Mono',monospace; font-size:12px; color:#7a705a; white-space:nowrap; }
+  .question-text{ font-family:'Fraunces',serif; font-weight:600; font-size:21px; line-height:1.3; margin: 4px 0 18px; color:#1c2536; }
+  .hard-tag{ display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; background: var(--red); color:#fff; padding:3px 8px; border-radius:10px; margin-bottom:8px; }
+  .cat-tag{ display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; background:#e4dcc2; color:#5c5340; padding:3px 8px; border-radius:10px; margin-bottom:8px; margin-right:6px; }
   .choices{ display:grid; gap:10px; }
-  .choice{ text-align:left; padding:13px 16px; border-radius:2px; border:1.5px solid #cfc6ab; background:#fbf8f0; font-family:'Source Serif 4',serif; font-size:15.5px; cursor:pointer; color:#2a2418; display:flex; gap:12px; align-items:flex-start; transition: all .12s ease; }
-  .choice .letter{ font-family:'IBM Plex Mono',monospace; font-weight:600; color: var(--accent); border:1px solid var(--accent); width:22px;height:22px;min-width:22px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:12px; }
-  .choice:hover:not(:disabled){ border-color: var(--ink); background:#f2ecdb; }
-  .choice.correct{ background:#e4f0e6; border-color:var(--green); }
-  .choice.wrong{ background:#f5e3e0; border-color:var(--red); }
+  .choice{
+    text-align:left; padding:13px 16px; border-radius:8px; border:1.5px solid #cfc6ab; background:#fbf8f0;
+    font-family:'Source Serif 4',serif; font-size:15.5px; cursor:pointer; color:#2a2418; display:flex; gap:12px;
+    align-items:flex-start; transition: all .15s ease;
+  }
+  .choice .letter{ font-family:'JetBrains Mono',monospace; font-weight:600; color: var(--accent); border:1px solid var(--accent); width:22px;height:22px;min-width:22px; border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:12px; transition: all .15s ease; }
+  .choice:hover:not(:disabled){ border-color: var(--ink); background:#f2ecdb; transform: translateX(2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .choice:hover:not(:disabled) .letter{ background: var(--ink); color: var(--accent-2); }
+  .choice.correct{ background:#e4f0e6; border-color:var(--green); animation: choicePop 0.4s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 0 0 1px var(--green), 0 6px 18px rgba(31,111,84,0.25); }
+  .choice.wrong{ background:#f5e3e0; border-color:var(--red); animation: choiceShake 0.4s ease; }
   .choice.chosen{ background:#eee3c9; border-color:var(--accent); }
-  .choice:disabled{ cursor:default; opacity:0.85; }
-  .feedback-banner{ margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:10px 12px; border-radius:2px; background:#e9e2cc; border-left:3px solid var(--accent); line-height:1.5; }
+  .choice:disabled{ cursor:default; opacity:0.9; }
+  @keyframes choicePop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.025); } 100%{ transform:scale(1); } }
+  @keyframes choiceShake{ 0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-5px); } 40%{ transform:translateX(4px); } 60%{ transform:translateX(-3px); } 80%{ transform:translateX(2px); } }
+  .feedback-banner{ margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:12.5px; padding:11px 13px; border-radius:6px; background:#e9e2cc; border-left:3px solid var(--accent); line-height:1.55; animation: fadeUp 0.35s ease; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
   .next-row{ margin-top:18px; text-align:right; }
   .tally-wrap{ display:flex; flex-direction:column; gap:18px; margin: 10px 0 22px; }
   .tally-row{ display:flex; align-items:center; gap:14px; }
-  .tally-name{ width:150px; font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:14px; letter-spacing:0.5px; }
+  .tally-name{ width:150px; font-family:'Space Grotesk',sans-serif; font-weight:600; text-transform:uppercase; font-size:14px; letter-spacing:0.5px; }
   .flap-set{ display:flex; gap:4px; }
-  .flap{ width:34px; height:46px; background: var(--ink); color: var(--gold-2); border-radius:3px; font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:26px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+  .flap{
+    width:34px; height:46px; background: linear-gradient(180deg, var(--ink-3), var(--ink)); color: var(--gold-2);
+    border-radius:5px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:26px;
+    display:flex; align-items:center; justify-content:center; position:relative;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 3px 8px rgba(0,0,0,0.35);
+  }
   .flap::after{ content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(0,0,0,0.5); }
-  .flap.flip{ animation: flip 0.28s ease; }
-  @keyframes flip{ 0%{ transform: rotateX(0deg); } 50%{ transform: rotateX(90deg); opacity:0.4;} 100%{ transform: rotateX(0deg);} }
-  .pct-sign{ font-family:'IBM Plex Mono',monospace; font-size:20px; color:#7a705a; }
-  .bar-track{ flex:1; height:16px; background:#ddd5bd; border-radius:8px; overflow:hidden; }
-  .bar-fill{ height:100%; border-radius:8px; transition:width 1.1s cubic-bezier(.2,.9,.2,1); }
-  .bar-fill.you{ background: var(--accent); }
-  .bar-fill.opp{ background:#8a94ab; }
-  .result-banner{ font-family:'Oswald',sans-serif; font-size:28px; text-transform:uppercase; text-align:center; padding:16px; margin:6px 0 18px; border-radius:2px; letter-spacing:1px; }
-  .result-banner.win{ background:#e4f0e6; color:var(--green); border:2px solid var(--green); }
-  .result-banner.lose{ background:#f5e3e0; color:var(--red); border:2px solid var(--red); }
+  .flap.flip{ animation: flip 0.32s ease; }
+  @keyframes flip{ 0%{ transform: rotateX(0deg); } 45%{ transform: rotateX(94deg); opacity:0.35; box-shadow: 0 0 16px rgba(242,213,131,0.5), inset 0 0 0 1px rgba(255,255,255,0.08); } 100%{ transform: rotateX(0deg);} }
+  .pct-sign{ font-family:'JetBrains Mono',monospace; font-size:20px; color:#7a705a; }
+  .bar-track{ flex:1; height:17px; background:#ddd5bd; border-radius:9px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:9px; transition:width 1.2s cubic-bezier(.16,1,.3,1); position:relative; overflow:hidden; }
+  .bar-fill::after{
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.35) 45%, transparent 60%);
+    background-size:250% 100%; animation: barShine 2.4s ease-in-out infinite;
+  }
+  @keyframes barShine{ 0%{ background-position: 200% 0; } 100%{ background-position: -50% 0; } }
+  .bar-fill.you{ background: linear-gradient(90deg, var(--accent-3), var(--accent), var(--accent-2)); }
+  .bar-fill.opp{ background: linear-gradient(90deg, #6b7690, #8a94ab); }
+  .result-banner{
+    font-family:'Fraunces',serif; font-weight:600; font-size:29px; text-transform:uppercase; text-align:center;
+    padding:18px; margin:6px 0 18px; border-radius:8px; letter-spacing:1px; animation: bannerPop 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes bannerPop{ 0%{ opacity:0; transform:scale(0.9) translateY(-6px);} 100%{ opacity:1; transform:scale(1) translateY(0);} }
+  .result-banner.win{ background:linear-gradient(135deg,#e4f0e6,#d3ecda); color:var(--green); border:2px solid var(--green); box-shadow: 0 8px 24px rgba(31,111,84,0.2); }
+  .result-banner.lose{ background:linear-gradient(135deg,#f5e3e0,#f0d5d0); color:var(--red); border:2px solid var(--red); box-shadow: 0 8px 24px rgba(166,49,75,0.15); }
   .stat-row{ display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 22px; }
-  .stat-box{ flex:1; min-width:130px; background:#fbf8f0; border:1px solid #cfc6ab; border-radius:2px; padding:12px 14px; }
-  .stat-box .label{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:#7a705a; }
-  .stat-box .value{ font-family:'Oswald',sans-serif; font-size:24px; margin-top:4px; }
-  .weight-note{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7a705a; margin: -8px 0 16px; line-height:1.5; }
-  .incident-tag{ display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; background: var(--ink); color: var(--gold-2); padding:4px 9px; border-radius:2px; margin-bottom:10px; }
-  .scenario-box{ background:#efe8d3; border-left:3px solid var(--red); padding:12px 14px; border-radius:2px; font-size:14.5px; line-height:1.5; margin-bottom:14px; color:#463f2e; }
-  .xp-track{ height:10px; background:#ddd5bd; border-radius:6px; overflow:hidden; margin-top:6px;}
-  .xp-fill{ height:100%; background: var(--green); transition: width 0.6s ease; }
+  .stat-box{
+    flex:1; min-width:130px; background:#fbf8f0; border:1px solid #cfc6ab; border-radius:8px; padding:12px 14px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .stat-box:hover{ transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
+  .stat-box .label{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:#7a705a; }
+  .stat-box .value{ font-family:'Fraunces',serif; font-weight:600; font-size:25px; margin-top:4px; }
+  .weight-note{ font-family:'JetBrains Mono',monospace; font-size:11px; color:#7a705a; margin: -8px 0 16px; line-height:1.5; }
+  .incident-tag{ display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; background: linear-gradient(120deg, var(--ink-2), var(--ink)); color: var(--gold-2); padding:4px 9px; border-radius:5px; margin-bottom:10px; }
+  .scenario-box{ background:#efe8d3; border-left:3px solid var(--red); padding:12px 14px; border-radius:6px; font-size:14.5px; line-height:1.55; margin-bottom:14px; color:#463f2e; }
+  .xp-track{ height:11px; background:#ddd5bd; border-radius:7px; overflow:hidden; margin-top:6px;}
+  .xp-fill{ height:100%; background: linear-gradient(90deg, var(--accent-3), var(--green)); transition: width 0.7s cubic-bezier(.16,1,.3,1); }
   #confetti{ position:fixed; inset:0; pointer-events:none; z-index:50; }
-  .footer-links{ text-align:center; margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6f7fa0; }
-  .footer-links a{ color:#9fb0cc; cursor:pointer; text-decoration:underline; }
+  .footer-links{ text-align:center; margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#7c8bb0; }
+  .footer-links a{ color:#a9b8dc; cursor:pointer; text-decoration:underline; transition: color 0.15s ease; }
+  .footer-links a:hover{ color: var(--gold-2); }
   ::-webkit-scrollbar{ width:8px; }
   ::-webkit-scrollbar-thumb{ background:#c9c2ab; border-radius:4px; }
   /* ---------- Dialogue / storytelling UI ---------- */
   .dlg-wrap{ display:flex; flex-direction:column; gap:14px; margin-bottom:6px; }
-  .dlg-line{ display:flex; gap:12px; align-items:flex-start; animation: dlgIn 0.3s ease; }
-  @keyframes dlgIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
-  .dlg-avatar{ width:44px; height:44px; min-width:44px; border-radius:50%; background: var(--ink); display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow: 0 2px 0 var(--accent) inset; overflow:hidden; position:relative; }
+  .dlg-line{ display:flex; gap:12px; align-items:flex-start; animation: dlgIn 0.35s cubic-bezier(.22,1,.36,1); }
+  @keyframes dlgIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .dlg-avatar{
+    width:44px; height:44px; min-width:44px; border-radius:50%; background: linear-gradient(160deg, var(--ink-3), var(--ink));
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+    box-shadow: 0 2px 0 var(--accent) inset, 0 3px 10px rgba(0,0,0,0.3); overflow:hidden; position:relative;
+  }
   .dlg-avatar .avatar-img{ width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
   .dlg-avatar .avatar-emoji{ display:none; width:100%; height:100%; align-items:center; justify-content:center; font-size:22px; }
-  .dlg-bubble{ background:#fbf8f0; border:1px solid #cfc6ab; border-radius:10px; padding:12px 16px; flex:1; }
-  .dlg-name{ font-family:'Oswald',sans-serif; font-size:12.5px; text-transform:uppercase; letter-spacing:1px; color: var(--red); margin-bottom:4px; }
-  .dlg-text{ font-size:15.5px; line-height:1.5; color:#2a2418; }
+  .dlg-bubble{ background:#fbf8f0; border:1px solid #cfc6ab; border-radius:12px; padding:12px 16px; flex:1; }
+  .dlg-name{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:12.5px; text-transform:uppercase; letter-spacing:1px; color: var(--red); margin-bottom:4px; }
+  .dlg-text{ font-size:15.5px; line-height:1.55; color:#2a2418; }
   .dlg-controls{ text-align:right; margin-top:8px; }
   @media (max-width:480px){
-    .card{ padding:22px 18px 20px; } .masthead h1{ font-size:23px; } .question-text{ font-size:18px; }
+    .card{ padding:22px 18px 20px; } .masthead h1{ font-size:24px; } .question-text{ font-size:18px; }
     .tally-name{ width:96px; font-size:12px; } .flap{ width:26px; height:36px; font-size:19px; }
     .dlg-avatar{ width:36px; height:36px; min-width:36px; } .dlg-avatar .avatar-emoji{ font-size:18px; }
   }
-  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001s !important; transition-duration:0.001s !important; } }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001s !important; transition-duration:0.001s !important; } body{ animation:none; } }
 </style>
 </head>
 <body>
@@ -124,7 +211,7 @@
 <div class="frame">
   <div class="masthead">
     <h1>IN <span>POWER</span></h1>
-    <div class="tag" id="hudTag">🗳️ Campaign Simulator v2.2</div>
+    <div class="tag" id="hudTag">🗳️ Campaign Simulator v3.0</div>
   </div>
   <div class="hud" id="hud"></div>
   <div class="card" id="card"></div>
@@ -2020,6 +2107,12 @@ const CHARACTERS = {
     rival:       {name:"Rival Candidate Dana Wells", emoji:"🎯", img:"/images/dana.jpg"}
   },
   ng: {
+    // Base/default Nigerian cast. "leader" is met before the player has
+    // picked a state, and "chair" only appears for the nationwide President
+    // race — neither is tied to one geopolitical zone, so they stay fixed.
+    // coordinator/manager/rival below are just the fallback used until a
+    // zone is known; see NG_ZONE_TEAMS + currentTeam() for the versions
+    // actually shown once a state/LGA has been picked.
     leader:      {name:"Mama Ngozi",              emoji:"🧣", img:"/images/ngozi.jpg"},
     coordinator: {name:"Coordinator Emeka Obi",    emoji:"🗂️", img:"/images/emeka.jpg"},
     manager:     {name:"Campaign Mgr. Bola Adeyemi",emoji:"📋", img:"/images/bola.jpg"},
@@ -2027,6 +2120,138 @@ const CHARACTERS = {
     rival:       {name:"Rival Candidate Chief Tunde Balogun", emoji:"🎯", img:"/images/tunde.jpg"}
   }
 };
+
+// Regional casts for Nigeria's coordinator (Local tier), campaign manager
+// (Governor tier) and rival candidate. These three roles are only ever met
+// AFTER the player has picked a specific state/LGA, so their names are drawn
+// from a pool appropriate to that state's geopolitical zone — avoiding
+// mismatches like an Igbo name (e.g. "Emeka") showing up as the player's own
+// team in a North West race, where Hausa/Fulani names are far more typical.
+// Each role has 2 name options per zone; pickZoneRoster() below picks one at
+// random each time a race starts, so replays "cycle through" different names
+// instead of always showing the same pairing. Names are illustrative — swap
+// in your own as needed.
+const NG_ZONE_TEAMS = {
+  "North West": { // Hausa/Fulani-majority: Kano, Kaduna, Katsina, Sokoto, Zamfara, Jigawa, Kebbi
+    coordinator: [
+      {name:"Coordinator Ibrahim Sani",   emoji:"🗂️", img:"/images/ibrahim.jpg"},
+      {name:"Coordinator Hauwa Abdullahi",emoji:"🗂️", img:"/images/hauwa.jpg"}
+    ],
+    manager: [
+      {name:"Campaign Mgr. Aisha Bello",  emoji:"📋", img:"/images/aisha.jpg"},
+      {name:"Campaign Mgr. Nasiru Garba", emoji:"📋", img:"/images/nasiru.jpg"}
+    ],
+    rival: [
+      {name:"Rival Candidate Alhaji Musa Danjuma", emoji:"🎯", img:"/images/musa.jpg"},
+      {name:"Rival Candidate Hajiya Zainab Yusuf", emoji:"🎯", img:"/images/zainab.jpg"}
+    ]
+  },
+  "North East": { // Hausa/Kanuri/Fulani-majority: Borno, Yobe, Adamawa, Bauchi, Gombe, Taraba
+    coordinator: [
+      {name:"Coordinator Fatima Modu", emoji:"🗂️", img:"/images/fatima.jpg"},
+      {name:"Coordinator Ali Kachalla",emoji:"🗂️", img:"/images/ali.jpg"}
+    ],
+    manager: [
+      {name:"Campaign Mgr. Aliyu Mustapha", emoji:"📋", img:"/images/aliyu.jpg"},
+      {name:"Campaign Mgr. Halima Grema",   emoji:"📋", img:"/images/halima.jpg"}
+    ],
+    rival: [
+      {name:"Rival Candidate Alhaji Modu Bulama", emoji:"🎯", img:"/images/modu.jpg"},
+      {name:"Rival Candidate Hajiya Amina Sale",  emoji:"🎯", img:"/images/amina.jpg"}
+    ]
+  },
+  "North Central": { // Middle Belt: ethnically/religiously mixed — Tiv, Nupe, Idoma, Igala, Berom, Gwari, plus Hausa-Fulani settlers
+    coordinator: [
+      {name:"Coordinator Solomon Anyebe", emoji:"🗂️", img:"/images/solomon.jpg"},
+      {name:"Coordinator Deborah Dachung",emoji:"🗂️", img:"/images/deborah.jpg"}
+    ],
+    manager: [
+      {name:"Campaign Mgr. Yakubu Ndagi",   emoji:"📋", img:"/images/yakubu.jpg"},
+      {name:"Campaign Mgr. Grace Iorwuese", emoji:"📋", img:"/images/grace.jpg"}
+    ],
+    rival: [
+      {name:"Rival Candidate Danjuma Gyang",  emoji:"🎯", img:"/images/danjuma.jpg"},
+      {name:"Rival Candidate Comfort Achema", emoji:"🎯", img:"/images/comfort.jpg"}
+    ]
+  },
+  "South East": { // Igbo-majority: Abia, Anambra, Ebonyi, Enugu, Imo
+    coordinator: [
+      {name:"Coordinator Emeka Obi",   emoji:"🗂️", img:"/images/emeka.jpg"},
+      {name:"Coordinator Chidinma Eze",emoji:"🗂️", img:"/images/chidinma.jpg"}
+    ],
+    manager: [
+      {name:"Campaign Mgr. Ngozi Okafor", emoji:"📋", img:"/images/ngozi_o.jpg"},
+      {name:"Campaign Mgr. Chukwuma Ibe", emoji:"📋", img:"/images/chukwuma.jpg"}
+    ],
+    rival: [
+      {name:"Rival Candidate Chief Obiora Nwachukwu", emoji:"🎯", img:"/images/obiora.jpg"},
+      {name:"Rival Candidate Chief Adaeze Umeh",      emoji:"🎯", img:"/images/adaeze.jpg"}
+    ]
+  },
+  "South South": { // Niger Delta: Ijaw, Efik, Ibibio, Urhobo, Itsekiri, Edo, Ikwerre, Ogoni
+    coordinator: [
+      {name:"Coordinator Preye Amaso", emoji:"🗂️", img:"/images/preye.jpg"},
+      {name:"Coordinator Ekaette Udoh",emoji:"🗂️", img:"/images/ekaette.jpg"}
+    ],
+    manager: [
+      {name:"Campaign Mgr. Efe Omoregie",  emoji:"📋", img:"/images/efe.jpg"},
+      {name:"Campaign Mgr. Boma Fyneface", emoji:"📋", img:"/images/boma.jpg"}
+    ],
+    rival: [
+      {name:"Rival Candidate Chief Tamuno Wonodi", emoji:"🎯", img:"/images/tamuno.jpg"},
+      {name:"Rival Candidate Chief Inibehe Okon",  emoji:"🎯", img:"/images/inibehe.jpg"}
+    ]
+  },
+  "South West": { // Yoruba-majority: Lagos, Ogun, Oyo, Osun, Ondo, Ekiti
+    coordinator: [
+      {name:"Coordinator Adewale Ogunleye", emoji:"🗂️", img:"/images/adewale.jpg"},
+      {name:"Coordinator Folake Adisa",     emoji:"🗂️", img:"/images/folake.jpg"}
+    ],
+    manager: [
+      {name:"Campaign Mgr. Bola Adeyemi", emoji:"📋", img:"/images/bola.jpg"},
+      {name:"Campaign Mgr. Kunle Bakare", emoji:"📋", img:"/images/kunle.jpg"}
+    ],
+    rival: [
+      {name:"Rival Candidate Chief Tunde Balogun", emoji:"🎯", img:"/images/tunde.jpg"},
+      {name:"Rival Candidate Chief Yemisi Ajayi",  emoji:"🎯", img:"/images/yemisi.jpg"}
+    ]
+  }
+};
+// Picks one name per role from a zone's pool — called once each time a race
+// starts (see tierIntroThenStart) so the trio stays consistent for that whole
+// race but can differ on the next replay.
+function pickZoneRoster(zone){
+  const roster = NG_ZONE_TEAMS[zone];
+  if(!roster) return null;
+  return { coordinator: pick(roster.coordinator), manager: pick(roster.manager), rival: pick(roster.rival) };
+}
+
+// The grassroots "leader" character the player meets right at the start,
+// before any country-specific ethnicity would even be knowable (they haven't
+// picked a state yet). Rather than one fixed, ethnically-specific name, this
+// is a pool of generic pan-Nigerian nicknames — the kind of thing a
+// community figure gets called regardless of where in the country they're
+// from. One is picked fresh each time the player starts a Nigeria career
+// (see chooseCountry), so it cycles across playthroughs too.
+const NG_LEADER_NAMES = [
+  {name:"Mama T",        emoji:"🧣", img:"/images/mama_t.jpg"},
+  {name:"Broda Area",    emoji:"🧢", img:"/images/broda_area.jpg"},
+  {name:"Aunty Comfort", emoji:"🧣", img:"/images/aunty_comfort.jpg"},
+  {name:"Baba Sunday",   emoji:"🎩", img:"/images/baba_sunday.jpg"},
+  {name:"Mama Justina",  emoji:"🧣", img:"/images/mama_justina.jpg"},
+  {name:"Oga Area",      emoji:"🧢", img:"/images/oga_area.jpg"}
+];
+// The character set actually in play right now: the US cast, or Nigeria's
+// base cast until G.zoneRoster/G.ngLeader are set, or Nigeria's base cast
+// with the leader swapped for this playthrough's nickname and
+// coordinator/manager/rival swapped for the current zone's roster.
+function currentTeam(){
+  const base = CHARACTERS[G.country];
+  if(G.country!=='ng') return base;
+  const leader = G.ngLeader || base.leader;
+  if(!G.zoneRoster) return { ...base, leader };
+  return { leader, chair: base.chair, coordinator: G.zoneRoster.coordinator, manager: G.zoneRoster.manager, rival: G.zoneRoster.rival };
+}
 // Renders one character's portrait as a small avatar: tries the image first,
 // and falls back to the emoji automatically if the image link is broken or
 // missing (via the img's onerror handler — no manual toggle needed).
@@ -2062,7 +2287,6 @@ const RIVAL_LINES = {
   ]
 };
 function rivalIntroLine(country, tier){
-  const r = CHARACTERS[country].rival;
   return {who:'rival', text: pick(RIVAL_LINES[tier])};
 }
 
@@ -2079,56 +2303,91 @@ function introLinesPart1(country){
     {who:'leader', text:"Mind if I ask you a few things, just for fun? Let's see how plugged in you are."}
   ];
 }
-// Opening scene, part 2: after the pop-culture quiz — the compliment, then
-// the handoff to the party coordinator.
+// Opening scene, part 2: after the pop-culture quiz — just the compliment
+// and the "have you thought about running" question. The coordinator isn't
+// introduced yet; the player doesn't meet them until they've actually picked
+// a state/LGA (see tierIntroLines, tier==='local'), so the coordinator can be
+// someone from that specific area instead of a name fixed before the map is
+// even on screen.
 function introLinesPart2(country){
-  const c = CHARACTERS[country];
   if(country==='ng') return [
     {who:'leader', text:"Ehen! No be small thing o — you sabi pass wetin I think. You get mouth wey fit yarn people well well..."},
-    {who:'leader', text:"You never think say make you run for office before?"},
-    {who:'leader', text:`Make I carry you meet person. ${c.coordinator.name}, na dis person be di one wey I dey tell you about.`},
-    {who:'coordinator', text:"Good to meet you. I coordinate campaigns for the party around here."},
-    {who:'coordinator', text:`${c.leader.name} doesn't hype just anyone — you must have something.`},
-    {who:'coordinator', text:"We're always looking for new faces to run for office. Everyone starts somewhere — local council, mayor's office, LGA chairman, whatever your community calls it."}
+    {who:'leader', text:"You never think say make you run for office before?"}
   ];
   return [
     {who:'leader', text:"Ha! Not bad at all. You know, you've got a way of talking to people..."},
-    {who:'leader', text:"Have you ever thought about running for office?"},
-    {who:'leader', text:`Let me introduce you to someone. ${c.coordinator.name}, this is who I was telling you about.`},
-    {who:'coordinator', text:"Good to meet you. I coordinate campaigns for the party around here."},
-    {who:'coordinator', text:`${c.leader.name} doesn't hype just anyone — you must have something.`},
-    {who:'coordinator', text:"We're always looking for new faces to run for office. Everyone starts somewhere — local council, mayor's office, LGA chairman, whatever your community calls it."}
+    {who:'leader', text:"Have you ever thought about running for office?"}
   ];
 }
 // The one extra line shown if the player picks "Tell me more first" at the
-// coordinator's "you in?" prompt.
-function coordinatorMoreLine(country){
-  return {who:'coordinator', text:"Fair enough. Look — we handle the strategy, you handle the people. Answer honestly, work hard, and the rest follows. That's really all there is to it."};
+// leader's "you in?" prompt.
+function leaderMoreLine(country){
+  return {who:'leader', text: country==='ng'
+    ? "No wahala. Just answer well, work hard, no lazy — di rest go follow. Na so e be."
+    : "Fair enough. Answer honestly, work hard, and the rest follows. That's really all there is to it."};
 }
 
 // Per-tier campaign-trail dialogue. "first" = first time ever reaching this
 // tier (introduces a new character); otherwise a short repeat line plays.
+// The coordinator, manager, and chair are each introduced by whichever
+// character the player has already met by that point — so if a tier gets
+// skipped (e.g. going straight to Governor or President), the handoff still
+// makes sense instead of referencing someone never met.
 function tierIntroLines(country, tier, localityLabel, stateLabel, firstTime){
-  const c = CHARACTERS[country];
+  const c = currentTeam();
+  const ng = country==='ng';
+  const seenLocal = G.seenTierIntro.local;
+  const seenGovernor = G.seenTierIntro.governor;
   if(tier==='local'){
-    if(firstTime) return [
+    if(firstTime) return ng ? [
+      {who:'leader', text:`Make I carry you meet person for ${localityLabel}. ${c.coordinator.name}, na dis person be di one wey I dey tell you about.`},
+      {who:'coordinator', text:"Good to meet you. I coordinate campaigns for the party around here."},
+      {who:'coordinator', text:`${c.leader.name} no dey hype anybody anyhow — you must get something.`},
+      {who:'coordinator', text:`${localityLabel} is where we start everyone. Small stage, real stakes — the people here know each other, and they'll know if you've done your homework.`},
+      {who:'coordinator', text:"Let's get you on the ballot."}
+    ] : [
+      {who:'leader', text:`Let me introduce you to someone here in ${localityLabel}. ${c.coordinator.name}, this is who I was telling you about.`},
+      {who:'coordinator', text:"Good to meet you. I coordinate campaigns for the party around here."},
+      {who:'coordinator', text:`${c.leader.name} doesn't hype just anyone — you must have something.`},
       {who:'coordinator', text:`${localityLabel} is where we start everyone. Small stage, real stakes — the people here know each other, and they'll know if you've done your homework.`},
       {who:'coordinator', text:"Let's get you on the ballot."}
     ];
     return [{who:'coordinator', text:`${localityLabel} is watching again. Let's give them a reason to keep you.`}];
   }
   if(tier==='governor'){
-    if(firstTime) return [
-      {who:'coordinator', text:"You handled that well. This next step is bigger — I'm bringing in someone who runs statewide campaigns."},
-      {who:'manager', text:`Heard good things. ${stateLabel} isn't like ${localityLabel} — every corner's got different concerns. Let's see if you can speak to all of them.`}
-    ];
+    if(firstTime){
+      if(seenLocal) return [
+        {who:'coordinator', text:"You handled that well. This next step is bigger — I'm bringing in someone who runs statewide campaigns."},
+        {who:'manager', text:`Heard good things. ${stateLabel} isn't like ${localityLabel} — every corner's got different concerns. Let's see if you can speak to all of them.`}
+      ];
+      return ng ? [
+        {who:'leader', text:`Dis one na bigger stage o. Make I bring person wey sabi run statewide campaign — ${c.manager.name}.`},
+        {who:'manager', text:`Good to meet you. ${stateLabel} is a lot more than one community — every corner's got different concerns. Let's see if you can speak to all of them.`}
+      ] : [
+        {who:'leader', text:`This is a bigger stage. Let me bring in someone who runs statewide campaigns — ${c.manager.name}.`},
+        {who:'manager', text:`Good to meet you. ${stateLabel} is a lot more than one community — every corner's got different concerns. Let's see if you can speak to all of them.`}
+      ];
+    }
     return [{who:'manager', text:`Back on the trail for ${stateLabel}. Let's remind them why they picked you.`}];
   }
   // president
-  if(firstTime) return [
-    {who:'manager', text:`Alright — this is the one. I'm stepping back. ${c.chair.name} runs the national campaigns from here.`},
-    {who:'chair', text:"The party's been watching your numbers. This is the national stage now — every region, every question. Trivia alone won't save you up here. You'll need everything you've learned along the way."}
-  ];
+  if(firstTime){
+    if(seenGovernor) return [
+      {who:'manager', text:`Alright — this is the one. I'm stepping back. ${c.chair.name} runs the national campaigns from here.`},
+      {who:'chair', text:"The party's been watching your numbers. This is the national stage now — every region, every question. Trivia alone won't save you up here. You'll need everything you've learned along the way."}
+    ];
+    if(seenLocal) return [
+      {who:'coordinator', text:`Alright — this is the big one. ${c.chair.name} runs the national campaigns from here.`},
+      {who:'chair', text:"The party's been watching your numbers. This is the national stage now — every region, every question. Trivia alone won't save you up here. You'll need everything you've learned along the way."}
+    ];
+    return ng ? [
+      {who:'leader', text:`Dis one na di top level. Make I hand you over — ${c.chair.name} dey run di national campaign.`},
+      {who:'chair', text:"The party's been watching your numbers. This is the national stage now — every region, every question. Trivia alone won't save you up here. You'll need everything you've learned along the way."}
+    ] : [
+      {who:'leader', text:`This is the top level. Let me hand you over to ${c.chair.name} — they run the national campaign.`},
+      {who:'chair', text:"The party's been watching your numbers. This is the national stage now — every region, every question. Trivia alone won't save you up here. You'll need everything you've learned along the way."}
+    ];
+  }
   return [{who:'chair', text:"The nation's watching again. Time to defend your record."}];
 }
 
@@ -2291,7 +2550,7 @@ function buildPresidentRaceQuiz(country, all){
    9. GAME STATE & SCORING
    ============================================================================ */
 let G = {
-  country:null, office:null, stateObj:null, lga:null,
+  country:null, office:null, stateObj:null, lga:null, zone:null, zoneRoster:null, ngLeader:null,
   experience:0, term:1,
   questions:[], qIndex:0, correct:0,
   incidentQueue:[], incidentIndex:0, incidentGains:0,
@@ -2345,6 +2604,17 @@ const hud = document.getElementById('hud');
 const hudTag = document.getElementById('hudTag');
 const footerLinks = document.getElementById('footerLinks');
 
+/* Retrigger the card's entrance animation every time its content is replaced,
+   so every screen change gets a flashy transition without touching each
+   individual screen function. */
+const cardTransitionObserver = new MutationObserver(()=>{
+  card.classList.remove('card-enter');
+  void card.offsetWidth; /* force reflow so the animation restarts */
+  card.classList.add('card-enter');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+cardTransitionObserver.observe(card, { childList:true });
+
 function setBodyCountry(){ document.body.classList.toggle('country-ng', G.country==='ng'); }
 function countryLabel(){ return G.country==='us' ? 'United States' : 'Nigeria'; }
 function countryFlag(){ return G.country==='us' ? '🇺🇸' : '🇳🇬'; }
@@ -2360,7 +2630,7 @@ function renderHud(){
   hud.innerHTML = chips.map(c=>`<div class="chip">${c}</div>`).join('');
 }
 function fullRestart(){
-  G = { country:null, office:null, stateObj:null, lga:null, experience:0, term:1, questions:[], qIndex:0, correct:0,
+  G = { country:null, office:null, stateObj:null, lga:null, zone:null, zoneRoster:null, ngLeader:null, experience:0, term:1, questions:[], qIndex:0, correct:0,
         incidentQueue:[], incidentIndex:0, incidentGains:0, currentCrisis:null,
         electionsWon:0, electionsLost:0, lastResult:null,
         introDone:false, introCharisma:0, seenTierIntro:{local:false,governor:false,president:false},
@@ -2377,7 +2647,7 @@ function screenDialogue(lines, onDone){
 function renderDialogueStep(){
   renderHud();
   const line = G._dlgLines[G._dlgIdx];
-  const person = CHARACTERS[G.country][line.who];
+  const person = currentTeam()[line.who];
   card.innerHTML = `
     <div class="eyebrow"><span>📖 STORY</span><span>${countryFlag()} ${countryLabel().toUpperCase()}</span></div>
     <div class="dlg-wrap">
@@ -2400,10 +2670,10 @@ function dialogueNext(){
 
 /* ---------- Screen 0: main menu ---------- */
 function screenMenu(){
-  G.country=null; G.office=null; G.stateObj=null;
+  G.country=null; G.office=null; G.stateObj=null; G.zone=null; G.zoneRoster=null;
   renderHud(); footerLinks.innerHTML='';
   card.innerHTML = `
-    <div class="eyebrow"><span>🗳️ WELCOME</span><span>IN POWER v2.2</span></div>
+    <div class="eyebrow"><span>🗳️ WELCOME</span><span>IN POWER v3.0</span></div>
     <h2 class="title">Choose your country</h2>
     <p class="lede">Your political career starts with a conversation, not a ballot. Answer trivia, build experience, and climb from local office to the presidency — though trivia alone won't carry you at the top.</p>
     <div class="btn-grid">
@@ -2414,6 +2684,7 @@ function screenMenu(){
 }
 function chooseCountry(c){
   G.country=c; setBodyCountry();
+  if(c==='ng') G.ngLeader = pick(NG_LEADER_NAMES); // fresh nickname each time a Nigeria career starts
   if(!G.introDone){ introStep1(); } else { screenOfficeSelect(); }
 }
 
@@ -2429,7 +2700,7 @@ function screenPopQuestion(){
   renderHud();
   const total = G._popQuestions.length;
   const q = G._popQuestions[G._popIndex];
-  const leader = CHARACTERS[G.country].leader;
+  const leader = currentTeam().leader;
   const letters=['A','B','C','D'];
   card.innerHTML = `
     <div class="eyebrow"><span>📖 STORY · JUST FOR FUN</span><span>${G._popIndex+1}/${total}</span></div>
@@ -2461,10 +2732,10 @@ function nextPopQuestion(){
   G._popIndex++;
   if(G._popIndex>=G._popQuestions.length){ introStep2(); } else { screenPopQuestion(); }
 }
-function introStep2(){ screenDialogue(introLinesPart2(G.country), screenCoordinatorChoice); }
-function screenCoordinatorChoice(){
+function introStep2(){ screenDialogue(introLinesPart2(G.country), screenLeaderChoice); }
+function screenLeaderChoice(){
   renderHud();
-  const c = CHARACTERS[G.country].coordinator;
+  const c = currentTeam().leader;
   card.innerHTML = `
     <div class="eyebrow"><span>📖 STORY</span><span>${countryFlag()} ${countryLabel().toUpperCase()}</span></div>
     <div class="dlg-line" style="margin-bottom:18px;">
@@ -2472,13 +2743,13 @@ function screenCoordinatorChoice(){
       <div class="dlg-bubble"><div class="dlg-name">${c.name}</div><div class="dlg-text">So — you in?</div></div>
     </div>
     <div class="btn-grid">
-      <button class="btn gold" onclick="acceptCoordinator()">🖋️ I'm ready to run</button>
-      <button class="btn outline" onclick="askCoordinatorMore()">🤔 Tell me more first</button>
+      <button class="btn gold" onclick="acceptLeader()">🖋️ I'm ready to run</button>
+      <button class="btn outline" onclick="askLeaderMore()">🤔 Tell me more first</button>
     </div>
   `;
 }
-function askCoordinatorMore(){ screenDialogue([coordinatorMoreLine(G.country)], screenCoordinatorChoice); }
-function acceptCoordinator(){
+function askLeaderMore(){ screenDialogue([leaderMoreLine(G.country)], screenLeaderChoice); }
+function acceptLeader(){
   G.introDone = true;
   G.experience = G.introCharisma; // charisma earned in the opening scene seeds your first campaign
   screenOfficeSelect();
@@ -2487,12 +2758,13 @@ function acceptCoordinator(){
 /* ---------- Office & region selection ---------- */
 function screenOfficeSelect(){
   renderHud();
+  G.zone = null; G.zoneRoster = null; // fresh region hasn't been picked yet, so fall back to the default cast
   const localLabel = officeLabel('local', G.country);
   const localSub = G.country==='ng' ? 'Pick any of Nigeria\'s 774 LGAs' : '20 region-specific questions';
   card.innerHTML = `
     <div class="eyebrow"><span>${countryFlag()} ${countryLabel().toUpperCase()}</span><span>CHOOSE YOUR RACE</span></div>
     <h2 class="title">Where do you start?</h2>
-    <p class="lede">${CHARACTERS[G.country].coordinator.name} suggests starting local — but the choice is yours.</p>
+    <p class="lede">${currentTeam().leader.name} suggests starting local — but the choice is yours.</p>
     <div class="btn-grid">
       <button class="btn gold" onclick="chooseOffice('local')">🏘️ Run for ${localLabel} <small>${localSub}</small></button>
       <button class="btn" onclick="chooseOffice('governor')">🏛️ Run for Governor <small>20 region-specific questions</small></button>
@@ -2568,6 +2840,12 @@ function pickLga(stateName, lgaName){
 /* ---------- Per-tier campaign-trail dialogue, then the quiz ---------- */
 function tierIntroThenStart(tier, stateObj){
   const country = G.country;
+  // Once a state is known, lock in a name roster from that state's
+  // geopolitical zone (Nigeria only) — picked fresh each race, so the
+  // coordinator/manager/rival "cycle through" different regional names
+  // across replays instead of repeating the same fixed cast everywhere.
+  G.zone = (country==='ng' && stateObj) ? stateObj.zone : null;
+  G.zoneRoster = G.zone ? pickZoneRoster(G.zone) : null;
   const localityLabel = stateObj ? localityOf(country, stateObj, tier==='local'?G.lga:null) : '';
   const stateLabel = stateObj ? stateObj.name : '';
   const firstTime = !G.seenTierIntro[tier];
@@ -2845,7 +3123,7 @@ const ctx = confettiCanvas.getContext('2d');
 function resizeConfetti(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
 window.addEventListener('resize', resizeConfetti); resizeConfetti();
 function fireConfetti(){
-  const colors = ['#C9A227','#e0bb45','#2F6E5B','#F2ECDD','#B23A2F'];
+  const colors = ['#CBA135','#F2D583','#1F6F54','#F6EFDD','#A6314B','#6C4F94'];
   const pieces = Array.from({length:120}, ()=>({ x: Math.random()*confettiCanvas.width, y: -20-Math.random()*200, vx: (Math.random()-0.5)*3, vy: 2+Math.random()*3, size: 4+Math.random()*5, color: colors[Math.floor(Math.random()*colors.length)], rot: Math.random()*360, vr: (Math.random()-0.5)*10 }));
   let frame=0;
   function tick(){
